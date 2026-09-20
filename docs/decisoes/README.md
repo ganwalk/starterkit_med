@@ -36,5 +36,7 @@ Todas as decisões de produto/negócio/técnicas ficam documentadas aqui, uma po
 | 9 | Divisão de lucros e vesting | Pendente | Sócios + advogado externo | — |
 | 10 | Cobertura do atendimento 24h | Decidido, falta detalhar | Diogo | — |
 | 11 | Escopo da migração total | A definir | Vitor, João Pedro | — |
+| 12 | Stack do design system e do protótipo | Decidido | Armando | [`12-stack-do-prototipo.md`](./12-stack-do-prototipo.md) |
+| 13 | Direção visual | Decidido | Armando | [`../design-system/direcao-visual.md`](../design-system/direcao-visual.md) |
 
 Decisões sem arquivo próprio ainda vivem só na tabela do documento de escopo (§15) — crie o arquivo individual quando alguém for revisá-la ou fechá-la, para não duplicar manutenção sem necessidade.

@@ -1,0 +1,128 @@
+/* Fonte auto-hospedada: sem requisição a terceiro. Num produto de saúde isso
+   evita vazar o IP do dispositivo do paciente para o Google a cada acesso. */
+@import '@fontsource-variable/manrope';
+
+@import 'tailwindcss';
+@import './tokens.css';
+@import './themes.css';
+
+/* Mapeia a camada semântica para utilitários Tailwind.
+   `inline` faz o utilitário apontar para a var em vez de copiar o valor,
+   que é o que permite trocar tema e clínica em runtime. */
+@theme inline {
+  --font-sans: var(--font-sans);
+
+  --color-page: var(--surface-page);
+  --color-card: var(--surface-card);
+  --color-sunken: var(--surface-sunken);
+  --color-hover: var(--surface-hover);
+  --color-inverse: var(--surface-inverse);
+
+  --color-primary: var(--text-primary);
+  --color-secondary: var(--text-secondary);
+  --color-muted: var(--text-muted);
+  --color-faint: var(--text-faint);
+  --color-on-inverse: var(--text-inverse);
+
+  --color-subtle: var(--border-subtle);
+  --color-line: var(--border-default);
+  --color-line-strong: var(--border-strong);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-muted: var(--accent-muted);
+  --color-accent-contrast: var(--accent-contrast);
+
+  --color-active: var(--active-bg);
+  --color-on-active: var(--active-fg);
+
+  --color-success: var(--success-fg);
+  --color-success-soft: var(--success-bg);
+  --color-warning: var(--warning-fg);
+  --color-warning-soft: var(--warning-bg);
+  --color-danger: var(--danger-fg);
+  --color-danger-soft: var(--danger-bg);
+  --color-info: var(--info-fg);
+  --color-info-soft: var(--info-bg);
+
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+  --radius-pill: var(--radius-pill);
+
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+
+  --text-display: var(--text-display);
+  --text-h1: var(--text-h1);
+  --text-h2: var(--text-h2);
+  --text-h3: var(--text-h3);
+  --text-h4: var(--text-h4);
+  --text-body: var(--text-body);
+  --text-sm: var(--text-sm);
+  --text-xs: var(--text-xs);
+  --text-2xs: var(--text-2xs);
+
+  --ease-out: var(--ease-out);
+}
+
+@layer base {
+  * {
+    border-color: var(--border-subtle);
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--surface-page);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--leading-normal);
+    letter-spacing: var(--tracking-snug);
+  }
+
+  /* Numerais alinhados: obrigatório em agenda, tabela e dashboard */
+  table,
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+
+  ::selection {
+    background: var(--accent-muted);
+    color: var(--text-primary);
+  }
+}
+
+@layer utilities {
+  /* Numeral de destaque: fino e grande de propósito (princípio 5) */
+  .numeral {
+    font-weight: var(--weight-numeral);
+    letter-spacing: var(--tracking-tight);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--leading-tight);
+  }
+
+  .transition-base {
+    transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+    transition-duration: var(--duration-base);
+    transition-timing-function: var(--ease-out);
+  }
+}
