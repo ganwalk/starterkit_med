@@ -22,7 +22,7 @@ export function TenantSwitcher() {
               aria-pressed={selected}
               title={`${item.nome} — ${item.especialidade}`}
               className={cn(
-                'flex items-center gap-2 rounded-pill px-3 py-1.5 text-xs font-medium transition-base',
+                'flex min-h-[var(--target-min)] items-center gap-2 rounded-pill px-3 text-xs font-medium transition-base',
                 selected ? 'bg-card text-primary shadow-sm' : 'text-secondary hover:text-primary',
               )}
             >

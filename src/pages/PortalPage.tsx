@@ -35,13 +35,16 @@ export function PortalPage() {
         }}
       >
         <div
-          className="pointer-events-none absolute -top-24 -right-16 size-80 rounded-full opacity-20"
-          style={{ background: 'radial-gradient(circle, #fff 0%, transparent 70%)' }}
+          className="pointer-events-none absolute -top-24 -right-16 size-80 rounded-full"
+          style={{
+            background: 'radial-gradient(circle, #fff 0%, transparent 70%)',
+            opacity: 'var(--opacity-decorative)',
+          }}
           aria-hidden
         />
         <div className="relative mx-auto max-w-3xl">
           <p className="text-sm font-semibold text-white/70">{tenant.nome}</p>
-          <h1 className="mt-2 text-[2.75rem] leading-[1.05] font-extrabold tracking-[-0.035em] text-white">
+          <h1 className="text-h1 mt-2 leading-[1.05] font-bold tracking-[-0.035em] text-white">
             Olá, Ana Beatriz
           </h1>
           <p className="mt-3 max-w-md text-white/80">

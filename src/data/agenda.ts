@@ -9,6 +9,8 @@ export interface Profissional {
 
 export interface Agendamento {
   id: string
+  /** Data no formato YYYY-MM-DD */
+  data: string
   profissionalId: string
   /** 'HH:MM' no fuso da clínica */
   inicio: string
@@ -38,9 +40,13 @@ export const HORA_FIM = 19
 /** Granularidade da grade em minutos: 15 permite encaixe sem quebrar o alinhamento */
 export const SLOT = 15
 
+/** Dia de referência do protótipo: uma quinta-feira cheia, escrita à mão. */
+export const DIA_BASE = '2026-09-24'
+
 export const AGENDAMENTOS: Agendamento[] = [
   {
     id: 'a1',
+    data: DIA_BASE,
     profissionalId: 'helena',
     inicio: '08:00',
     duracao: 30,
@@ -54,6 +60,7 @@ export const AGENDAMENTOS: Agendamento[] = [
   },
   {
     id: 'a2',
+    data: DIA_BASE,
     profissionalId: 'helena',
     inicio: '08:30',
     duracao: 60,
@@ -66,6 +73,7 @@ export const AGENDAMENTOS: Agendamento[] = [
   },
   {
     id: 'a3',
+    data: DIA_BASE,
     profissionalId: 'helena',
     inicio: '10:00',
     duracao: 30,
@@ -79,6 +87,7 @@ export const AGENDAMENTOS: Agendamento[] = [
   },
   {
     id: 'a4',
+    data: DIA_BASE,
     profissionalId: 'helena',
     inicio: '10:45',
     duracao: 15,
@@ -93,6 +102,7 @@ export const AGENDAMENTOS: Agendamento[] = [
   },
   {
     id: 'a5',
+    data: DIA_BASE,
     profissionalId: 'helena',
     inicio: '11:00',
     duracao: 30,
@@ -105,6 +115,7 @@ export const AGENDAMENTOS: Agendamento[] = [
   },
   {
     id: 'a6',
+    data: DIA_BASE,
     profissionalId: 'helena',
     inicio: '14:00',
     duracao: 60,
@@ -117,6 +128,7 @@ export const AGENDAMENTOS: Agendamento[] = [
   },
   {
     id: 'a7',
+    data: DIA_BASE,
     profissionalId: 'helena',
     inicio: '15:30',
     duracao: 30,
@@ -130,6 +142,7 @@ export const AGENDAMENTOS: Agendamento[] = [
 
   {
     id: 'b1',
+    data: DIA_BASE,
     profissionalId: 'rafael',
     inicio: '08:00',
     duracao: 60,
@@ -142,6 +155,7 @@ export const AGENDAMENTOS: Agendamento[] = [
   },
   {
     id: 'b2',
+    data: DIA_BASE,
     profissionalId: 'rafael',
     inicio: '09:30',
     duracao: 30,
@@ -155,6 +169,7 @@ export const AGENDAMENTOS: Agendamento[] = [
   },
   {
     id: 'b3',
+    data: DIA_BASE,
     profissionalId: 'rafael',
     inicio: '10:30',
     duracao: 30,
@@ -167,6 +182,7 @@ export const AGENDAMENTOS: Agendamento[] = [
   },
   {
     id: 'b4',
+    data: DIA_BASE,
     profissionalId: 'rafael',
     inicio: '14:30',
     duracao: 60,
@@ -179,6 +195,7 @@ export const AGENDAMENTOS: Agendamento[] = [
   },
   {
     id: 'b5',
+    data: DIA_BASE,
     profissionalId: 'rafael',
     inicio: '16:00',
     duracao: 30,
@@ -193,6 +210,7 @@ export const AGENDAMENTOS: Agendamento[] = [
 
   {
     id: 'c1',
+    data: DIA_BASE,
     profissionalId: 'camila',
     inicio: '09:00',
     duracao: 30,
@@ -206,6 +224,7 @@ export const AGENDAMENTOS: Agendamento[] = [
   },
   {
     id: 'c2',
+    data: DIA_BASE,
     profissionalId: 'camila',
     inicio: '09:45',
     duracao: 45,
@@ -218,6 +237,7 @@ export const AGENDAMENTOS: Agendamento[] = [
   },
   {
     id: 'c3',
+    data: DIA_BASE,
     profissionalId: 'camila',
     inicio: '11:00',
     duracao: 30,
@@ -230,6 +250,7 @@ export const AGENDAMENTOS: Agendamento[] = [
   },
   {
     id: 'c4',
+    data: DIA_BASE,
     profissionalId: 'camila',
     inicio: '15:00',
     duracao: 60,
@@ -243,6 +264,7 @@ export const AGENDAMENTOS: Agendamento[] = [
 
   {
     id: 'd1',
+    data: DIA_BASE,
     profissionalId: 'bruno',
     inicio: '08:30',
     duracao: 30,
@@ -255,6 +277,7 @@ export const AGENDAMENTOS: Agendamento[] = [
   },
   {
     id: 'd2',
+    data: DIA_BASE,
     profissionalId: 'bruno',
     inicio: '10:00',
     duracao: 30,
@@ -267,6 +290,7 @@ export const AGENDAMENTOS: Agendamento[] = [
   },
   {
     id: 'd3',
+    data: DIA_BASE,
     profissionalId: 'bruno',
     inicio: '13:30',
     duracao: 30,
@@ -279,6 +303,7 @@ export const AGENDAMENTOS: Agendamento[] = [
   },
   {
     id: 'd4',
+    data: DIA_BASE,
     profissionalId: 'bruno',
     inicio: '16:30',
     duracao: 60,
@@ -311,4 +336,113 @@ export function formatarFaixa(inicio: string, duracao: number): string {
   const hh = String(Math.floor(fim / 60)).padStart(2, '0')
   const mm = String(fim % 60).padStart(2, '0')
   return `${inicio} – ${hh}:${mm}`
+}
+
+/* ===================================================================
+   Agenda além do dia base
+
+   O dia base é escrito à mão porque é a tela de demonstração. Os demais
+   dias são gerados de forma determinística a partir da própria data: a
+   mesma data sempre produz a mesma agenda, então a navegação por semana
+   e por mês fica estável entre recarregamentos.
+   =================================================================== */
+
+const NOMES = [
+  'Beatriz Almeida', 'Rodrigo Pires', 'Larissa Fontes', 'Marcelo Aguiar',
+  'Tatiane Rezende', 'Vinícius Carvalho', 'Priscila Bastos', 'Otávio Lacerda',
+  'Simone Andrade', 'Henrique Vasques', 'Débora Queiroz', 'Leandro Muniz',
+  'Cristina Peixoto', 'Fábio Antunes', 'Adriana Cordeiro', 'Murilo Bezerra',
+  'Elaine Siqueira', 'Gabriel Tormes', 'Natália Bandeira', 'Rogério Pacheco',
+]
+const TIPOS = ['Retorno', 'Primeira consulta', 'Avaliação', 'Procedimento']
+const CONVENIOS = ['Particular', 'Unimed', 'Amil', 'SulAmérica', 'Bradesco Saúde']
+const ORIGENS = ['Instagram', 'Indicação', 'Google', 'Site da clínica', 'WhatsApp']
+
+/** PRNG determinístico: mesma semente, mesma sequência. */
+function semente(texto: string): () => number {
+  let h = 2166136261
+  for (let i = 0; i < texto.length; i += 1) {
+    h ^= texto.charCodeAt(i)
+    h = Math.imul(h, 16777619)
+  }
+  return () => {
+    h += 0x6d2b79f5
+    let t = h
+    t = Math.imul(t ^ (t >>> 15), t | 1)
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61)
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+const HOJE = DIA_BASE
+
+function gerarDia(iso: string): Agendamento[] {
+  const dia = new Date(`${iso}T12:00:00`).getDay()
+  if (dia === 0) return [] // clínica fechada aos domingos
+
+  const rnd = semente(iso)
+  const gerados: Agendamento[] = []
+  const passado = iso < HOJE
+  const sabado = dia === 6
+
+  for (const prof of PROFISSIONAIS) {
+    // Alvo por profissional, calibrado pelo dia base escrito à mão
+    // (4 a 7 consultas por dia). Sem alvo, o gerador enchia a agenda
+    // e a visão de mês perdia a capacidade de distinguir dia cheio de vazio.
+    const alvo = sabado ? 2 + Math.floor(rnd() * 2) : 4 + Math.floor(rnd() * 4)
+    const limite = (sabado ? 13 : HORA_FIM) * 60
+    const abertura = HORA_INICIO * 60
+
+    const ocupados: { inicio: number; fim: number }[] = []
+
+    for (let tentativa = 0; tentativa < alvo * 6 && ocupados.length < alvo; tentativa += 1) {
+      const duracao = [30, 30, 30, 45, 60][Math.floor(rnd() * 5)]
+      const vagas = Math.floor((limite - abertura - duracao) / SLOT)
+      const inicio = abertura + Math.floor(rnd() * vagas) * SLOT
+      const fim = inicio + duracao
+
+      // Intervalo de almoço fica majoritariamente livre, como numa agenda real
+      if (inicio >= 12 * 60 && inicio < 13 * 60 && rnd() < 0.8) continue
+      if (ocupados.some((o) => inicio < o.fim && fim > o.inicio)) continue
+
+      ocupados.push({ inicio, fim })
+
+      // Dia passado já tem desfecho; dia futuro ainda está por acontecer
+      const statusPassado: AgendaStatus[] = [
+        'confirmado', 'confirmado', 'confirmado', 'confirmado', 'faltou', 'cancelado',
+      ]
+      const statusFuturo: AgendaStatus[] = [
+        'agendado', 'agendado', 'confirmado', 'confirmado', 'confirmado', 'confirmado',
+      ]
+      const status = (passado ? statusPassado : statusFuturo)[Math.floor(rnd() * 6)]
+
+      gerados.push({
+        id: `g-${iso}-${prof.id}-${inicio}`,
+        data: iso,
+        profissionalId: prof.id,
+        inicio: `${String(Math.floor(inicio / 60)).padStart(2, '0')}:${String(inicio % 60).padStart(2, '0')}`,
+        duracao,
+        paciente: NOMES[Math.floor(rnd() * NOMES.length)],
+        tipo: TIPOS[Math.floor(rnd() * TIPOS.length)],
+        convenio: CONVENIOS[Math.floor(rnd() * CONVENIOS.length)],
+        status,
+        origem: ORIGENS[Math.floor(rnd() * ORIGENS.length)],
+        telefone: `(62) 9${Math.floor(rnd() * 9000 + 1000)}-${Math.floor(rnd() * 9000 + 1000)}`,
+      })
+    }
+  }
+  return gerados.sort((a, b) => paraMinutos(a.inicio) - paraMinutos(b.inicio))
+}
+
+const cache = new Map<string, Agendamento[]>()
+
+/** Agendamentos de um dia. O dia base vem escrito à mão; o resto é gerado. */
+export function agendamentosDoDia(iso: string): Agendamento[] {
+  if (iso === DIA_BASE) return AGENDAMENTOS
+  if (!cache.has(iso)) cache.set(iso, gerarDia(iso))
+  return cache.get(iso)!
+}
+
+export function isoDe(data: Date): string {
+  return `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}-${String(data.getDate()).padStart(2, '0')}`
 }

@@ -1,70 +1,52 @@
-import { NavLink, Navigate, Route, Routes } from 'react-router-dom'
-import { cn } from '@/lib/cn'
-import { useTenant } from '@/tenant/TenantProvider'
-import { TenantSwitcher } from '@/app/TenantSwitcher'
-import { DesignSystemPage } from '@/pages/DesignSystemPage'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { AppShell } from '@/app/AppShell'
 import { AgendaPage } from '@/pages/AgendaPage'
+import { RecepcaoPage } from '@/pages/RecepcaoPage'
+import { PacientesPage } from '@/pages/PacientesPage'
+import { ConversasPage } from '@/pages/ConversasPage'
+import { FunilPage } from '@/pages/FunilPage'
+import { IndicadoresPage } from '@/pages/IndicadoresPage'
+import { FinanceiroPage } from '@/pages/FinanceiroPage'
+import { MigracaoPage } from '@/pages/MigracaoPage'
+import { MarcaPage } from '@/pages/MarcaPage'
+import { SuportePage } from '@/pages/SuportePage'
+import { SegurancaPage } from '@/pages/SegurancaPage'
 import { PortalPage } from '@/pages/PortalPage'
+import { DesignSystemPage } from '@/pages/DesignSystemPage'
 
-const SECTIONS = [
-  { to: '/design-system', label: 'Design system' },
-  { to: '/agenda', label: 'Agenda' },
-  { to: '/portal', label: 'Portal do paciente' },
+/** Telas do app da recepção: todas dentro do shell com navegação lateral */
+const APP_ROUTES = [
+  { path: '/agenda', element: <AgendaPage /> },
+  { path: '/recepcao', element: <RecepcaoPage /> },
+  { path: '/pacientes', element: <PacientesPage /> },
+  { path: '/conversas', element: <ConversasPage /> },
+  { path: '/funil', element: <FunilPage /> },
+  { path: '/indicadores', element: <IndicadoresPage /> },
+  { path: '/financeiro', element: <FinanceiroPage /> },
+  { path: '/migracao', element: <MigracaoPage /> },
+  { path: '/marca', element: <MarcaPage /> },
+  { path: '/suporte', element: <SuportePage /> },
+  { path: '/seguranca', element: <SegurancaPage /> },
 ]
-
-function Header() {
-  const { tenant } = useTenant()
-
-  return (
-    <header className="border-subtle bg-card/80 sticky top-0 z-40 border-b backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-6 px-6">
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2.5">
-            <span className="bg-accent size-7 shrink-0 rounded-md" aria-hidden />
-            <span className="text-primary text-h4 font-extrabold tracking-[-0.02em]">
-              {tenant.marca}
-            </span>
-          </div>
-
-          <nav className="bg-sunken hidden items-center gap-1 rounded-pill p-1 md:flex">
-            {SECTIONS.map((section) => (
-              <NavLink
-                key={section.to}
-                to={section.to}
-                className={({ isActive }) =>
-                  cn(
-                    'rounded-pill px-4 py-1.5 text-sm font-medium transition-base',
-                    isActive
-                      ? 'bg-active text-on-active shadow-xs'
-                      : 'text-secondary hover:text-primary',
-                  )
-                }
-              >
-                {section.label}
-              </NavLink>
-            ))}
-          </nav>
-        </div>
-
-        <TenantSwitcher />
-      </div>
-    </header>
-  )
-}
 
 export function App() {
   return (
-    <div className="bg-page min-h-screen">
-      <Header />
-      <main>
-        <Routes>
-          <Route path="/" element={<Navigate to="/design-system" replace />} />
-          <Route path="/design-system" element={<DesignSystemPage />} />
-          <Route path="/agenda" element={<AgendaPage />} />
-          <Route path="/portal" element={<PortalPage />} />
-          <Route path="*" element={<Navigate to="/design-system" replace />} />
-        </Routes>
-      </main>
-    </div>
+    <Routes>
+      {/* Portal do paciente e a documentação vivem fora do shell:
+          um é voltado ao paciente, o outro é material de referência. */}
+      <Route path="/portal" element={<PortalPage />} />
+      <Route path="/design-system" element={<DesignSystemPage />} />
+
+      {APP_ROUTES.map((route) => (
+        <Route
+          key={route.path}
+          path={route.path}
+          element={<AppShell>{route.element}</AppShell>}
+        />
+      ))}
+
+      <Route path="/" element={<Navigate to="/agenda" replace />} />
+      <Route path="*" element={<Navigate to="/agenda" replace />} />
+    </Routes>
   )
 }

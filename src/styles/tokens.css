@@ -14,7 +14,9 @@
   --neutral-200: #e0e4ea;
   --neutral-300: #cbd1da;
   --neutral-400: #a3abb9;
-  --neutral-500: #7b8494;
+  /* 500 escurecido de #7b8494 para atingir 4.5:1 sobre --surface-page.
+     O valor antigo media 3.55:1 e reprovava em WCAG AA. */
+  --neutral-500: #667082;
   --neutral-600: #5a6373;
   --neutral-700: #424a58;
   --neutral-800: #2a303a;
@@ -22,30 +24,34 @@
   --neutral-950: #0c0e13;
 
   /* --- Cores de estado (usadas só em dose mínima, princípio 7) --- */
+  /* Os tons 600 são os de TEXTO e foram escurecidos após a auditoria:
+     os valores anteriores mediam entre 4.04 e 4.47 sobre os fundos 50/100
+     e reprovavam o mínimo de 4.5:1. Os tons 500 são só para preenchimento
+     (bolinhas, barras), onde a regra de contraste de texto não se aplica. */
   --green-50: #ecfdf3;
   --green-100: #d3f8df;
   --green-500: #12a150;
-  --green-600: #0d8544;
+  --green-600: #0a6b37;
 
   --amber-50: #fffaeb;
   --amber-100: #fef0c7;
   --amber-500: #d99106;
-  --amber-600: #b45f06;
+  --amber-600: #8a4708;
 
   --red-50: #fef3f2;
   --red-100: #fee4e2;
   --red-500: #e5484d;
-  --red-600: #ca3214;
+  --red-600: #b3290f;
 
   --blue-50: #eff6ff;
   --blue-100: #dbeafe;
   --blue-500: #3b82f6;
-  --blue-600: #2563eb;
+  --blue-600: #1d4ed8;
 
   --violet-50: #f5f3ff;
   --violet-100: #ede9fe;
   --violet-500: #7c3aed;
-  --violet-600: #6d28d9;
+  --violet-600: #5b21b6;
 
   /* --- Tipografia --- */
   /* 'Manrope Variable' é o nome que o @fontsource-variable registra;
@@ -110,6 +116,21 @@
   --shadow-lg: 0 12px 32px -8px rgba(16, 24, 40, 0.1), 0 4px 12px -4px rgba(16, 24, 40, 0.05);
   --shadow-xl: 0 24px 56px -16px rgba(16, 24, 40, 0.14), 0 8px 20px -8px rgba(16, 24, 40, 0.06);
 
+  /* --- Opacidade ---
+     A auditoria encontrou cinco valores avulsos (0.2/0.4/0.45/0.55/0.7)
+     espalhados pelos componentes. Cada um agora tem nome e um único dono. */
+  --opacity-disabled: 0.45;
+  --opacity-cancelled: 0.55;
+  --opacity-series: 0.7;
+  --opacity-hairline: 0.4;
+  --opacity-decorative: 0.2;
+
+  /* --- Alvo de toque ---
+     Mínimo confortável para a recepção, que usa o sistema o dia inteiro e
+     eventualmente em tablet. A auditoria achou 17 controles abaixo disso. */
+  --target-min: 32px;
+  --target-comfortable: 36px;
+
   /* --- Movimento --- */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-fast: 120ms;
@@ -131,11 +152,14 @@
   --surface-hover: var(--neutral-50);
   --surface-inverse: var(--neutral-950);
 
-  /* Texto */
+  /* Texto — os quatro níveis passam em WCAG AA sobre --surface-page.
+     Antes da auditoria, muted media 3.55:1 e faint 2.18:1, ambos reprovados.
+     A hierarquia agora se apoia em tamanho e peso, não em texto apagado:
+     se está na tela, tem que dar para ler. */
   --text-primary: var(--neutral-900);
-  --text-secondary: var(--neutral-600);
-  --text-muted: var(--neutral-500);
-  --text-faint: var(--neutral-400);
+  --text-secondary: var(--neutral-700);
+  --text-muted: var(--neutral-600);
+  --text-faint: var(--neutral-500);
   --text-inverse: var(--neutral-0);
 
   /* Bordas: reforço, não padrão (princípio 3) */
@@ -161,7 +185,7 @@
   --status-atendimento-bg: var(--violet-50);
   --status-faltou-fg: var(--red-600);
   --status-faltou-bg: var(--red-50);
-  --status-cancelado-fg: var(--neutral-500);
+  --status-cancelado-fg: var(--neutral-600);
   --status-cancelado-bg: var(--neutral-100);
 
   /* Feedback */
@@ -183,10 +207,13 @@
   --surface-hover: var(--neutral-800);
   --surface-inverse: var(--neutral-0);
 
+  /* No escuro os níveis andam para CIMA na escala, não para baixo: o mesmo
+     token que escurece no claro precisa clarear aqui. Escurecer neutral-500
+     para corrigir o tema claro reprovou o escuro até esta correção. */
   --text-primary: var(--neutral-50);
-  --text-secondary: var(--neutral-400);
-  --text-muted: var(--neutral-500);
-  --text-faint: var(--neutral-600);
+  --text-secondary: var(--neutral-300);
+  --text-muted: var(--neutral-400);
+  --text-faint: #8a93a2;
   --text-inverse: var(--neutral-950);
 
   --border-subtle: #22262e;
@@ -196,6 +223,10 @@
   --active-bg: var(--neutral-0);
   --active-fg: var(--neutral-950);
 
+  /* Os dois status neutros precisam clarear no escuro: com o valor do tema
+     claro mediam 2.5:1 sobre o fundo escuro. */
+  --status-agendado-fg: var(--neutral-400);
+  --status-cancelado-fg: var(--neutral-400);
   --status-agendado-bg: #22262e;
   --status-confirmado-bg: rgba(18, 161, 80, 0.14);
   --status-chegou-bg: rgba(59, 130, 246, 0.14);
