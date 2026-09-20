@@ -35,7 +35,11 @@ jobs:
 
       - run: npm run build
 
+      # enablement liga o Pages pela API no primeiro run, evitando ter que
+      # habilitar à mão em Settings → Pages.
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
