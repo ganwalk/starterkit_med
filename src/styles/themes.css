@@ -1,0 +1,67 @@
+/* =========================================================================
+   CAMADA 3 — MARCA POR CLÍNICA (white label)
+   Um tenant redefine SOMENTE o acento. Neutros, elevação e estado ativo
+   continuam iguais — é isso que permite "customização vira parâmetro,
+   nunca fork" (§9 do escopo).
+   ========================================================================= */
+
+:root,
+[data-tenant='aurora'] {
+  /* Marca do próprio produto (codinome Aurora — nome final é a decisão 5) */
+  --brand-50: #eef4ff;
+  --brand-100: #dbe6ff;
+  --brand-500: #2f5fe0;
+  --brand-600: #2449bd;
+  --brand-contrast: #ffffff;
+}
+
+[data-tenant='vida'] {
+  /* Clínica Vida — teal */
+  --brand-50: #edfbf7;
+  --brand-100: #d0f4ea;
+  --brand-500: #0d9488;
+  --brand-600: #0b7a70;
+  --brand-contrast: #ffffff;
+}
+
+[data-tenant='corpus'] {
+  /* Instituto Corpus — violeta */
+  --brand-50: #f3f1ff;
+  --brand-100: #e6e1ff;
+  --brand-500: #5b46d9;
+  --brand-600: #4835b5;
+  --brand-contrast: #ffffff;
+}
+
+[data-tenant='lumina'] {
+  /* Derma Lumina — rosé */
+  --brand-50: #fff0f4;
+  --brand-100: #ffdde6;
+  --brand-500: #d6336c;
+  --brand-600: #b02858;
+  --brand-contrast: #ffffff;
+}
+
+[data-tenant='ampla'] {
+  /* Ampla Saúde — âmbar queimado, proposital para testar contraste difícil */
+  --brand-50: #fff6ea;
+  --brand-100: #ffe8c9;
+  --brand-500: #b45f06;
+  --brand-600: #93490a;
+  --brand-contrast: #ffffff;
+}
+
+/* Ponte para a camada semântica: componentes usam --accent, nunca --brand-* */
+:root {
+  --accent: var(--brand-500);
+  --accent-hover: var(--brand-600);
+  --accent-soft: var(--brand-50);
+  --accent-muted: var(--brand-100);
+  --accent-contrast: var(--brand-contrast);
+}
+
+[data-theme='dark'] {
+  /* No escuro o acento precisa clarear para manter contraste sobre fundo preto */
+  --accent-soft: color-mix(in srgb, var(--brand-500) 16%, transparent);
+  --accent-muted: color-mix(in srgb, var(--brand-500) 28%, transparent);
+}
