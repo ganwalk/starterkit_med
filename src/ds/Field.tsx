@@ -79,7 +79,7 @@ export function Switch({ checked, onChange, label, hideLabel = false }: SwitchPr
       aria-checked={checked}
       aria-label={hideLabel ? label : undefined}
       onClick={() => onChange(!checked)}
-      className="inline-flex items-center gap-2.5"
+      className="inline-flex min-h-[var(--target-min)] items-center gap-2.5"
     >
       <span
         className={cn(

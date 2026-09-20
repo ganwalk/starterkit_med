@@ -3,8 +3,8 @@ import { cn } from '@/lib/cn'
 type AvatarSize = 'xs' | 'sm' | 'md' | 'lg'
 
 const SIZES: Record<AvatarSize, string> = {
-  xs: 'size-6 text-[9px]',
-  sm: 'size-8 text-2xs',
+  xs: 'size-7 text-2xs',
+  sm: 'size-9 text-2xs',
   md: 'size-10 text-xs',
   lg: 'size-14 text-body',
 }

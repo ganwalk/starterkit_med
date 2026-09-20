@@ -43,7 +43,7 @@ export function Button({
     <button
       className={cn(
         'inline-flex items-center justify-center rounded-pill font-medium transition-base',
-        'disabled:cursor-not-allowed disabled:opacity-45',
+        'disabled:cursor-not-allowed disabled:opacity-[var(--opacity-disabled)]',
         VARIANTS[variant],
         SIZES[size],
         className,
@@ -66,7 +66,7 @@ export interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>
 }
 
 const ICON_SIZES: Record<Size, string> = {
-  sm: 'size-8',
+  sm: 'size-9',
   md: 'size-10',
   lg: 'size-12',
 }

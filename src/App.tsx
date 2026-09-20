@@ -33,7 +33,7 @@ function Header() {
                 to={section.to}
                 className={({ isActive }) =>
                   cn(
-                    'rounded-pill px-4 py-1.5 text-sm font-medium transition-base',
+                    'inline-flex min-h-[var(--target-comfortable)] items-center rounded-pill px-4 text-sm font-medium transition-base',
                     isActive
                       ? 'bg-active text-on-active shadow-xs'
                       : 'text-secondary hover:text-primary',

@@ -43,7 +43,9 @@ export function Segmented<T extends string>({
             onClick={() => onChange(option.value)}
             className={cn(
               'rounded-pill font-medium transition-base whitespace-nowrap',
-              size === 'sm' ? 'px-3 py-1 text-xs' : 'px-4 py-1.5 text-sm',
+              size === 'sm'
+                ? 'min-h-[var(--target-min)] px-3.5 text-xs'
+                : 'min-h-[var(--target-comfortable)] px-4 text-sm',
               selected
                 ? 'bg-active text-on-active shadow-xs'
                 : 'text-secondary hover:text-primary',

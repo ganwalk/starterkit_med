@@ -180,7 +180,7 @@ export function DesignSystemPage() {
                 <p className="text-primary text-xs font-semibold">{item.nome}</p>
                 <p className="text-faint text-2xs font-mono">{item.token}</p>
               </div>
-              <p className={`text-primary min-w-0 truncate ${item.classe}`}>{item.amostra}</p>
+              <p className={`text-primary min-w-0 ${item.classe}`}>{item.amostra}</p>
             </div>
           ))}
         </Card>

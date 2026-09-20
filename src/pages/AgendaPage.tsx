@@ -36,7 +36,9 @@ import {
 import type { Agendamento } from '@/data/agenda'
 
 const TOTAL_SLOTS = ((HORA_FIM - HORA_INICIO) * 60) / SLOT
-const ALTURA_SLOT = 22
+// 26px: altura mínima para um encaixe de 15 min caber uma linha de 11px
+// sem cortar. Com 22px a auditoria mediu texto de 25px em caixa de 20px.
+const ALTURA_SLOT = 26
 /** Horário "atual" do protótipo, fixo para a tela ficar sempre igual na demonstração */
 const AGORA = '10:20'
 
@@ -71,7 +73,7 @@ function CartaoAgendamento({
         'bg-card group relative mx-1 flex flex-col overflow-hidden rounded-md text-left transition-base',
         'border-subtle border shadow-xs hover:z-10 hover:shadow-md',
         compacto ? 'gap-0 px-2 py-1' : 'gap-0.5 px-2.5 py-1.5',
-        cancelado && 'opacity-55',
+        cancelado && 'opacity-[var(--opacity-cancelled)]',
         agendamento.encaixe && 'border-dashed',
       )}
     >
@@ -90,7 +92,7 @@ function CartaoAgendamento({
           {agendamento.paciente}
         </span>
         {agendamento.sinal && !compacto && (
-          <span className="bg-success-soft text-success rounded-pill px-1.5 text-[9px] font-bold">
+          <span className="bg-success-soft text-success rounded-pill px-1.5 text-2xs font-bold">
             Pix
           </span>
         )}
@@ -225,7 +227,10 @@ export function AgendaPage() {
             style={{ top: `${((paraMinutos(AGORA) - HORA_INICIO * 60) / SLOT) * ALTURA_SLOT + 8}px` }}
           >
             <span className="bg-danger size-2 shrink-0 rounded-full" />
-            <span className="bg-danger h-px flex-1 opacity-40" />
+            <span
+              className="bg-danger h-px flex-1"
+              style={{ opacity: 'var(--opacity-hairline)' }}
+            />
           </div>
 
           {/* Coluna de horas */}

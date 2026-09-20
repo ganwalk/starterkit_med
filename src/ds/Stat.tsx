@@ -28,8 +28,11 @@ export function Sparkline({ values, tone = 'neutral', className }: SparklineProp
       {values.map((value, index) => (
         <span
           key={index}
-          className={cn('w-[3px] shrink-0 rounded-full opacity-70', TONE_BAR[tone])}
-          style={{ height: `${Math.max((value / max) * 100, 6)}%` }}
+          className={cn('w-[3px] shrink-0 rounded-full', TONE_BAR[tone])}
+          style={{
+            height: `${Math.max((value / max) * 100, 6)}%`,
+            opacity: 'var(--opacity-series)',
+          }}
         />
       ))}
     </div>
@@ -74,7 +77,7 @@ export function Stat({ label, value, hint, delta, series, tone = 'neutral' }: St
         )}
       </div>
 
-      <p className="numeral text-primary mt-3 text-[2.75rem]">{value}</p>
+      <p className="numeral text-primary mt-3 text-h1">{value}</p>
       {hint && <p className="text-faint text-xs mt-1">{hint}</p>}
 
       {series && <Sparkline values={series} tone={tone} className="mt-auto pt-4" />}
