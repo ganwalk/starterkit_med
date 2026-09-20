@@ -21,3 +21,15 @@ export type { SegmentedProps, SegmentedOption } from './Nav'
 
 export { Sheet } from './Sheet'
 export type { SheetProps } from './Sheet'
+
+export { PageHeader, PageBody } from './PageHeader'
+export type { PageHeaderProps } from './PageHeader'
+
+export { Table } from './Table'
+export type { TableProps, Column } from './Table'
+
+export { Alert, EmptyState, Progress, Stepper, Skeleton } from './Feedback'
+export type { AlertProps, AlertTone, EmptyStateProps, ProgressProps, Step } from './Feedback'
+
+export { Tabs, Toolbar, Accordion, DataList, Timeline } from './Layout'
+export type { TabsProps, TabItem, TimelineEvent } from './Layout'
