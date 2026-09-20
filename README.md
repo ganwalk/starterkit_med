@@ -29,11 +29,28 @@ Cada push publica em **https://ganwalk.github.io/starterkit_med/** pelo workflow
 
 ## O que há aqui
 
-| Rota | O que mostra |
+**App da recepção** (navegação lateral):
+
+| Rota | Iniciativa do escopo |
 | --- | --- |
-| `/#/design-system` | Tokens, escala tipográfica, elevação e todos os componentes |
-| `/#/agenda` | Agenda multiprofissional da recepção — o núcleo do produto (§11.1 do escopo) |
-| `/#/portal` | Portal do paciente com a marca da clínica aplicada |
+| `/#/agenda` | Agenda multiprofissional — núcleo do produto (§11.1) |
+| `/#/recepcao` | Check-in por QR Code e fila de espera (§4) |
+| `/#/pacientes` | Cadastro único e reativação (§13) |
+| `/#/conversas` | WhatsApp oficial, caixa compartilhada e bot (§13, §8) |
+| `/#/funil` | Jornada do lead ao comparecimento (§13) |
+| `/#/indicadores` | Os três painéis do MVP mais reativação (§4) |
+| `/#/financeiro` | Pix, link de pagamento e sinal (§4) |
+| `/#/migracao` | Migração total com relatório de conciliação (§11.2) |
+| `/#/marca` | Motor de marca white label (§9) |
+| `/#/suporte` | SLA por severidade e escala de plantão (§11.3) |
+| `/#/seguranca` | Perfis de acesso e log de auditoria (§8) |
+
+**Fora do app:**
+
+| Rota | O que é |
+| --- | --- |
+| `/#/portal` | Portal do paciente, com a marca da clínica |
+| `/#/design-system` | Tokens, escala e componentes |
 
 Use o seletor de clínica no topo para trocar a marca, e o botão de tema para claro/escuro.
 Nenhum componente muda de forma ao trocar: só o acento muda de dono.
@@ -63,6 +80,23 @@ docs/            direção visual, planos e registro de decisões
 
 ## Documentação
 
-- [`docs/design-system/direcao-visual.md`](docs/design-system/direcao-visual.md) — de onde vem cada decisão visual
-- [`docs/armando/de-para-escopo.md`](docs/armando/de-para-escopo.md) — o que o escopo endereça ao Armando
+Índice completo em [`docs/design-system/`](docs/design-system/README.md).
+
+- [`direcao-visual.md`](docs/design-system/direcao-visual.md) — de onde vem cada decisão visual
+- [`fundamentos.md`](docs/design-system/fundamentos.md) — todos os tokens
+- [`componentes.md`](docs/design-system/componentes.md) — anatomia e quando usar cada componente
+- [`padroes.md`](docs/design-system/padroes.md) — padrões de tela e densidade
+- [`acessibilidade.md`](docs/design-system/acessibilidade.md) — regras vindas da auditoria
+- [`cobertura.md`](docs/design-system/cobertura.md) — cada iniciativa do escopo e a tela que a implementa
+- [`auditoria-ux.md`](docs/design-system/auditoria-ux.md) — resultado da auditoria medida
 - [`docs/decisoes/`](docs/decisoes/) — registro de decisões
+
+## Verificar acessibilidade
+
+Com o dev server no ar:
+
+```bash
+node scripts/audit-ux.mjs
+```
+
+Mede contraste real, tamanhos de fonte, opacidades, alvos de toque, cortes de conteúdo e hierarquia de headings, em dois temas.
