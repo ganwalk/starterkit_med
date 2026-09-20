@@ -40,7 +40,7 @@ Mapa de cada iniciativa do documento de escopo para a tela que a implementa. Ser
 
 | Pilar | Onde aparece |
 | --- | --- |
-| **11.1 Agenda própria de alta qualidade** | `/agenda` — multiprofissional e multissala, status, encaixe, bloqueio, linha do horário atual, histórico de alterações, confirmação gravando na agenda |
+| **11.1 Agenda própria de alta qualidade** | `/agenda` — visões de dia, semana e mês; multiprofissional e multissala; status, encaixe, linha do horário atual, histórico de alterações, confirmação gravando na agenda |
 | **11.2 Migração total com prova de fidelidade** | `/migracao` — contagem antes e depois por conjunto, itens não migrados com motivo, garantia de exportação na saída |
 | **11.3 Atendimento 24 horas** | `/suporte` — SLA por severidade com barra de risco, escala de plantão, carga por sócio, gatilho de contratação |
 | **Contrato transparente** | `/seguranca` — exportação sempre disponível; sem armadilha de saída |
@@ -69,7 +69,6 @@ Seguem a decisão do documento, não um esquecimento:
 
 | Lacuna | Onde entra |
 | --- | --- |
-| Visões de semana e mês na agenda | `/agenda` — os botões existem, só a visão de dia está implementada |
 | Fluxo de novo agendamento ponta a ponta | `/agenda` |
 | Onboarding de clínica nova, guiado | `/marca` |
 | Pesquisa de satisfação pós-consulta | `/portal` |

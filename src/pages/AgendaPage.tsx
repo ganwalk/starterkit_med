@@ -16,6 +16,8 @@ import {
   Card,
   IconButton,
   Input,
+  PageBody,
+  PageHeader,
   Segmented,
   Sheet,
   StatusPill,
@@ -24,16 +26,20 @@ import type { AgendaStatus } from '@/ds'
 import { cn } from '@/lib/cn'
 import { useTenant } from '@/tenant/TenantProvider'
 import {
-  AGENDAMENTOS,
+  DIA_BASE,
   HISTORICO,
   HORA_FIM,
   HORA_INICIO,
   PROFISSIONAIS,
   SLOT,
+  agendamentosDoDia,
   formatarFaixa,
+  isoDe,
   paraMinutos,
 } from '@/data/agenda'
 import type { Agendamento } from '@/data/agenda'
+import { VisaoSemana } from './agenda/VisaoSemana'
+import { VisaoMes } from './agenda/VisaoMes'
 
 const TOTAL_SLOTS = ((HORA_FIM - HORA_INICIO) * 60) / SLOT
 // 26px: altura mínima para um encaixe de 15 min caber uma linha de 11px
@@ -107,88 +113,167 @@ function CartaoAgendamento({
   )
 }
 
+type Visao = 'dia' | 'semana' | 'mes'
+
+const FORMATO_DIA = new Intl.DateTimeFormat('pt-BR', {
+  weekday: 'long',
+  day: 'numeric',
+  month: 'long',
+})
+const FORMATO_MES = new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' })
+
+function segundaDa(data: Date): Date {
+  const d = new Date(data)
+  d.setDate(d.getDate() - ((d.getDay() + 6) % 7))
+  return d
+}
+
+const maiuscula = (t: string) => t.charAt(0).toUpperCase() + t.slice(1)
+
 export function AgendaPage() {
   const { tenant } = useTenant()
-  const [visao, setVisao] = useState('dia')
+  const [visao, setVisao] = useState<Visao>('dia')
+  const [data, setData] = useState(() => new Date(`${DIA_BASE}T12:00:00`))
+  const [profSemana, setProfSemana] = useState(PROFISSIONAIS[0].id)
   const [selecionado, setSelecionado] = useState<Agendamento | null>(null)
   const [busca, setBusca] = useState('')
 
+  const iso = isoDe(data)
+  const doDia = useMemo(() => agendamentosDoDia(iso), [iso])
+
   const filtrados = useMemo(() => {
     const termo = busca.trim().toLowerCase()
-    if (!termo) return AGENDAMENTOS
-    return AGENDAMENTOS.filter((a) => a.paciente.toLowerCase().includes(termo))
-  }, [busca])
+    if (!termo) return doDia
+    return doDia.filter((a) => a.paciente.toLowerCase().includes(termo))
+  }, [busca, doDia])
 
   const resumo = useMemo(() => {
-    const total = AGENDAMENTOS.length
-    const porStatus = (status: AgendaStatus) =>
-      AGENDAMENTOS.filter((a) => a.status === status).length
+    const porStatus = (status: AgendaStatus) => doDia.filter((a) => a.status === status).length
     return {
-      total,
+      total: doDia.length,
       confirmados: porStatus('confirmado') + porStatus('chegou') + porStatus('atendimento'),
       pendentes: porStatus('agendado'),
       faltas: porStatus('faltou'),
     }
-  }, [])
+  }, [doDia])
+
+  /** O passo da navegação acompanha a visão: 1 dia, 7 dias ou 1 mês. */
+  function navegar(direcao: -1 | 1) {
+    setData((atual) => {
+      const nova = new Date(atual)
+      if (visao === 'dia') nova.setDate(nova.getDate() + direcao)
+      else if (visao === 'semana') nova.setDate(nova.getDate() + direcao * 7)
+      else nova.setMonth(nova.getMonth() + direcao)
+      return nova
+    })
+  }
+
+  function abrirDia(isoAlvo: string) {
+    setData(new Date(`${isoAlvo}T12:00:00`))
+    setVisao('dia')
+  }
+
+  const titulo =
+    visao === 'mes'
+      ? maiuscula(FORMATO_MES.format(data))
+      : visao === 'semana'
+        ? `Semana de ${segundaDa(data).getDate()} de ${FORMATO_MES.format(data).split(' de ')[0]}`
+        : maiuscula(FORMATO_DIA.format(data))
 
   const horas = Array.from({ length: HORA_FIM - HORA_INICIO }, (_, i) => HORA_INICIO + i)
 
+  const PASSO = { dia: 'dia', semana: 'semana', mes: 'mês' } as const
+
   return (
-    <div className="mx-auto max-w-[1400px] px-6 py-8">
-      <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-h2 text-primary font-bold tracking-[-0.02em]">
-            Quinta, 24 de setembro
-          </h1>
-          <p className="text-secondary mt-1 text-sm">
-            {resumo.total} agendamentos · {resumo.confirmados} confirmados ·{' '}
-            {resumo.pendentes} aguardando confirmação
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="flex items-center gap-1">
-            <IconButton icon={ArrowLeft01Icon} label="Dia anterior" size="sm" />
-            <Button variant="subtle" size="sm" icon={Calendar03Icon}>
-              Hoje
+    <PageBody>
+      <PageHeader
+        titulo={titulo}
+        resumo={
+          visao === 'dia'
+            ? `${resumo.total} agendamentos · ${resumo.confirmados} confirmados · ${resumo.pendentes} aguardando confirmação`
+            : visao === 'semana'
+              ? 'Um profissional por vez, para encontrar horário livre'
+              : 'Carga por dia. Clique num dia para abrir a agenda completa'
+        }
+        acoes={
+          <>
+            <div className="flex items-center gap-1">
+              <IconButton
+                icon={ArrowLeft01Icon}
+                label={`${PASSO[visao]} anterior`}
+                size="sm"
+                onClick={() => navegar(-1)}
+              />
+              <Button
+                variant="subtle"
+                size="sm"
+                icon={Calendar03Icon}
+                onClick={() => setData(new Date(`${DIA_BASE}T12:00:00`))}
+              >
+                Hoje
+              </Button>
+              <IconButton
+                icon={ArrowRight01Icon}
+                label={`Próximo ${PASSO[visao]}`}
+                size="sm"
+                onClick={() => navegar(1)}
+              />
+            </div>
+            <Segmented
+              label="Visão da agenda"
+              size="sm"
+              value={visao}
+              onChange={(v) => setVisao(v as Visao)}
+              options={[
+                { value: 'dia', label: 'Dia' },
+                { value: 'semana', label: 'Semana' },
+                { value: 'mes', label: 'Mês' },
+              ]}
+            />
+            <Button variant="accent" size="sm" icon={Add01Icon}>
+              Novo agendamento
             </Button>
-            <IconButton icon={ArrowRight01Icon} label="Próximo dia" size="sm" />
+          </>
+        }
+      />
+
+      {visao === 'dia' && (
+        <div className="mb-4 flex flex-wrap items-center gap-3">
+          <div className="w-full max-w-xs">
+            <Input
+              icon={Search01Icon}
+              placeholder="Buscar paciente"
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+            />
           </div>
-          <Segmented
-            label="Visão da agenda"
-            size="sm"
-            value={visao}
-            onChange={setVisao}
-            options={[
-              { value: 'dia', label: 'Dia' },
-              { value: 'semana', label: 'Semana' },
-              { value: 'mes', label: 'Mês' },
-            ]}
-          />
-          <Button variant="accent" size="sm" icon={Add01Icon}>
-            Novo agendamento
-          </Button>
+          <IconButton icon={FilterHorizontalIcon} label="Filtrar agenda" />
+          <div className="ml-auto flex flex-wrap items-center gap-2">
+            <Badge tone="success">{resumo.confirmados} confirmados</Badge>
+            <Badge tone="neutral">{resumo.pendentes} pendentes</Badge>
+            <Badge tone="danger">{resumo.faltas} faltas</Badge>
+          </div>
         </div>
-      </div>
+      )}
 
-      <div className="mb-4 flex flex-wrap items-center gap-3">
-        <div className="w-full max-w-xs">
-          <Input
-            icon={Search01Icon}
-            placeholder="Buscar paciente"
-            value={busca}
-            onChange={(e) => setBusca(e.target.value)}
-          />
-        </div>
-        <IconButton icon={FilterHorizontalIcon} label="Filtrar agenda" />
-        <div className="ml-auto flex flex-wrap items-center gap-2">
-          <Badge tone="success">{resumo.confirmados} confirmados</Badge>
-          <Badge tone="neutral">{resumo.pendentes} pendentes</Badge>
-          <Badge tone="danger">{resumo.faltas} faltas</Badge>
-        </div>
-      </div>
+      <Card padding={visao === 'mes' ? 'compact' : 'none'} elevation="sm" className="overflow-hidden">
+        {visao === 'semana' && (
+          <div className="p-4">
+            <VisaoSemana
+              inicioSemana={segundaDa(data)}
+              hoje={DIA_BASE}
+              profissionalId={profSemana}
+              onProfissionalChange={setProfSemana}
+              onSelect={setSelecionado}
+              onVerDia={abrirDia}
+            />
+          </div>
+        )}
 
-      <Card padding="none" elevation="sm" className="overflow-hidden">
+        {visao === 'mes' && <VisaoMes mes={data} hoje={DIA_BASE} onVerDia={abrirDia} />}
+
+        {visao === 'dia' && (
+        <>
         {/* A grade rola dentro do card: filtros e cabeçalho de profissionais
             ficam sempre visíveis enquanto a recepção percorre o dia. */}
         <div className="max-h-[calc(100vh-15rem)] overflow-y-auto">
@@ -276,11 +361,15 @@ export function AgendaPage() {
           ))}
         </div>
         </div>
+        </>
+        )}
       </Card>
 
-      <p className="text-faint mt-4 text-xs">
-        Clique em um agendamento para abrir o detalhe com histórico de alterações.
-      </p>
+      {visao === 'dia' && (
+        <p className="text-faint mt-4 text-xs">
+          Clique em um agendamento para abrir o detalhe com histórico de alterações.
+        </p>
+      )}
 
       <Sheet
         open={selecionado !== null}
@@ -366,6 +455,6 @@ export function AgendaPage() {
           </div>
         )}
       </Sheet>
-    </div>
+    </PageBody>
   )
 }

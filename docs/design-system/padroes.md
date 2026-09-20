@@ -118,3 +118,22 @@ O app é ferramenta de trabalho: campo grande de cor saturada cansa em jornada d
 - Rótulo de botão é **verbo de ação**: "Confirmar presença", não "OK".
 - Sem eyebrow desnecessária. Só quando carrega o que o título não diz — o nome da clínica acima do nome do paciente é o caso legítimo.
 - Número sempre com unidade ou contexto: "18,4%" sozinho não diz nada; "18,4% · baseline das entrevistas: 19,2%" diz.
+
+
+---
+
+## Agenda: uma visão, uma pergunta
+
+As três visões não são o mesmo dado em zoom diferente. Cada uma responde a uma pergunta distinta da recepção, e isso define o que cada uma mostra:
+
+| Visão | Pergunta | O que mostra | O que omite |
+| --- | --- | --- | --- |
+| **Dia** | "Como está hoje?" | Todos os profissionais lado a lado, com paciente, tipo e convênio | Outros dias |
+| **Semana** | "Onde tem horário livre para este médico?" | **Um profissional** ao longo de seis dias | Os demais profissionais |
+| **Mês** | "Que dia está cheio? Onde estão as faltas?" | Carga por dia, ocupação relativa e status em dose mínima | Nomes de pacientes |
+
+**Por que a semana mostra um profissional por vez:** empilhar quatro agendas na mesma coluna sobrepõe consultas no mesmo horário e a grade deixa de responder à pergunta que motivou abri-la. Quem abre a semana está procurando vaga para um médico específico.
+
+**Por que o mês não mostra pacientes:** não cabe, e não é o que se pergunta ali. Mostrar dois nomes e "+18" seria ruído. A carga relativa e a contagem de faltas respondem melhor, e um clique leva ao dia.
+
+**Consulta cancelada não conta como carga** no mês: ela não ocupa horário. Contá-la inflaria o dia e tornaria a barra de ocupação mentirosa.
