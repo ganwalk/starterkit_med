@@ -35,11 +35,10 @@ jobs:
 
       - run: npm run build
 
-      # enablement liga o Pages pela API no primeiro run, evitando ter que
-      # habilitar à mão em Settings → Pages.
+      # Requer o Pages já habilitado em Settings → Pages → Source: GitHub Actions.
+      # Não dá para ligar por aqui: criar o site exige permissão de administração,
+      # que o GITHUB_TOKEN não recebe ("Resource not accessible by integration").
       - uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:

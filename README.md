@@ -18,8 +18,14 @@ npm run dev
 Cada push publica em **https://ganwalk.github.io/starterkit_med/** pelo workflow
 `.github/workflows/deploy.yml`.
 
-Para o primeiro deploy funcionar, é preciso habilitar uma vez em
-**Settings → Pages → Build and deployment → Source: GitHub Actions**.
+> **Passo manual, uma única vez:** habilitar em
+> **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+>
+> Enquanto isso não for feito, o workflow falha em `configure-pages` com
+> `Not Found`. Não dá para automatizar: criar o site do Pages exige permissão de
+> administração do repositório, e o `GITHUB_TOKEN` do workflow não a recebe
+> (`Resource not accessible by integration`). Depois de habilitado, todo push
+> publica sozinho.
 
 ## O que há aqui
 
