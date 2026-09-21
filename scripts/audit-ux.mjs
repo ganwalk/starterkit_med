@@ -1,5 +1,4 @@
-import pkg from '/opt/node22/lib/node_modules/playwright/index.js'
-const { chromium } = pkg
+import { chromium } from 'playwright'
 
 const ROUTES = ['/design-system', '/agenda', '/portal']
 const BASE = 'http://localhost:5173/starterkit_med/#'
@@ -232,23 +231,49 @@ for (const width of [390, 768, 1440]) {
     await page.waitForTimeout(300)
     const r = await page.evaluate(() => {
       const de = document.documentElement
-      const containers = []
+      const rolando = []
+      const inuteis = []
       for (const el of document.querySelectorAll('*')) {
+        if (el === document.body || el === de) continue
         const cs = getComputedStyle(el)
-        if (!['auto', 'scroll'].includes(cs.overflowX)) continue
-        const excesso = el.scrollWidth - el.clientWidth
-        if (excesso > 2) {
-          containers.push({
-            classe: (el.className || '').toString().slice(0, 60),
-            excesso,
-          })
+        const podeX = ['auto', 'scroll'].includes(cs.overflowX)
+        const podeY = ['auto', 'scroll'].includes(cs.overflowY)
+        const exX = el.scrollWidth - el.clientWidth
+        const exY = el.scrollHeight - el.clientHeight
+        const classe = (el.className || '').toString().slice(0, 60)
+
+        // Rolagem lateral de verdade: sempre falha.
+        if (podeX && exX > 2) rolando.push({ eixo: 'X', excesso: exX, classe })
+
+        // Barra REALMENTE desenhada, ocupando espaço de layout, sem conteúdo
+        // que a justifique. Declarar overflow num eixo faz o outro virar
+        // `auto` pela especificação do CSS, então um container que pede
+        // rolagem sem precisar ganha a barra do eixo errado de brinde —
+        // foi assim que um filtro de três abas apareceu com barra vertical.
+        // Só faz sentido em container de rolagem de verdade: em elemento
+        // inline o clientWidth é 0 e a conta abaixo não significa nada.
+        if (!podeX && !podeY) continue
+        if (el.clientWidth === 0 || el.clientHeight === 0) continue
+
+        const bordaV = parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth)
+        const bordaH = parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth)
+        const barraV = el.offsetWidth - el.clientWidth - bordaV
+        const barraH = el.offsetHeight - el.clientHeight - bordaH
+        if (barraV > 2 && exY <= 2) {
+          inuteis.push({ classe, motivo: 'barra vertical sem conteúdo que a justifique' })
+        }
+        if (barraH > 2 && exX <= 2) {
+          inuteis.push({ classe, motivo: 'barra horizontal sem conteúdo que a justifique' })
         }
       }
-      return { pagina: de.scrollWidth - de.clientWidth, containers }
+      return { pagina: de.scrollWidth - de.clientWidth, rolando, inuteis }
     })
     if (r.pagina > 1) rolagens.push(`${width}px ${route}: PÁGINA rola ${r.pagina}px`)
-    for (const c of r.containers) {
-      rolagens.push(`${width}px ${route}: container rola ${c.excesso}px — ${c.classe}`)
+    for (const c of r.rolando) {
+      rolagens.push(`${width}px ${route}: rola no eixo ${c.eixo} (${c.excesso}px) — ${c.classe}`)
+    }
+    for (const c of r.inuteis) {
+      rolagens.push(`${width}px ${route}: rolagem declarada sem necessidade (${c.motivo}) — ${c.classe}`)
     }
   }
   await page.close()
@@ -257,5 +282,9 @@ for (const width of [390, 768, 1440]) {
 await browser.close()
 
 console.log(JSON.stringify(results, null, 1))
-console.error('\n=== ROLAGEM LATERAL ===')
-console.error(rolagens.length ? rolagens.join('\n') : 'nenhuma, em 13 rotas x 3 larguras')
+console.error('\n=== ROLAGEM ===')
+console.error(
+  rolagens.length
+    ? rolagens.join('\n')
+    : 'nenhuma rolagem lateral nem declarada sem necessidade, em 13 rotas x 3 larguras',
+)
