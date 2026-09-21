@@ -18,20 +18,50 @@ export interface TabsProps {
   ativo: string
   onChange: (id: string) => void
   label: string
+  /** Prefixo dos ids. Amarra cada aba ao painel que ela controla. */
+  idBase: string
 }
 
-/** Abas com sublinhado: para navegação dentro de uma tela, ao contrário do
- *  Segmented, que alterna a visão de um mesmo conteúdo. */
-export function Tabs({ itens, ativo, onChange, label }: TabsProps) {
+/** Id do painel de uma aba. Use em <TabPanel> para fechar o vínculo ARIA. */
+export const painelId = (idBase: string, id: string) => `${idBase}-painel-${id}`
+const abaId = (idBase: string, id: string) => `${idBase}-aba-${id}`
+
+/**
+ * Abas com sublinhado: navegam entre conteúdos diferentes dentro de uma
+ * tela, ao contrário do Segmented, que troca a lente do mesmo conteúdo.
+ *
+ * Toda aba aponta para o painel que controla — sem isso o leitor de tela
+ * anuncia "aba" e não sabe dizer o que ela abre. Setas esquerda e direita
+ * percorrem as abas, como a norma espera.
+ */
+export function Tabs({ itens, ativo, onChange, label, idBase }: TabsProps) {
+  function aoTeclar(evento: React.KeyboardEvent) {
+    const direcao = evento.key === 'ArrowRight' ? 1 : evento.key === 'ArrowLeft' ? -1 : 0
+    if (!direcao) return
+    evento.preventDefault()
+    const atual = itens.findIndex((i) => i.id === ativo)
+    const proximo = (atual + direcao + itens.length) % itens.length
+    onChange(itens[proximo].id)
+    document.getElementById(abaId(idBase, itens[proximo].id))?.focus()
+  }
+
   return (
-    <div role="tablist" aria-label={label} className="border-subtle flex gap-1 overflow-x-auto border-b">
+    <div
+      role="tablist"
+      aria-label={label}
+      onKeyDown={aoTeclar}
+      className="border-subtle flex gap-1 overflow-x-auto border-b"
+    >
       {itens.map((item) => {
         const selecionado = item.id === ativo
         return (
           <button
             key={item.id}
+            id={abaId(idBase, item.id)}
             role="tab"
             aria-selected={selecionado}
+            aria-controls={painelId(idBase, item.id)}
+            tabIndex={selecionado ? 0 : -1}
             onClick={() => onChange(item.id)}
             className={cn(
               'relative flex min-h-[var(--target-comfortable)] shrink-0 items-center gap-2 px-3 text-sm font-medium transition-base',
@@ -56,6 +86,26 @@ export function Tabs({ itens, ativo, onChange, label }: TabsProps) {
           </button>
         )
       })}
+    </div>
+  )
+}
+
+/** Painel de uma aba. Fecha o vínculo ARIA aberto por <Tabs>. */
+export function TabPanel({
+  idBase,
+  id,
+  ativo,
+  children,
+}: {
+  idBase: string
+  id: string
+  ativo: boolean
+  children: ReactNode
+}) {
+  if (!ativo) return null
+  return (
+    <div id={painelId(idBase, id)} role="tabpanel" aria-labelledby={`${idBase}-aba-${id}`} tabIndex={0}>
+      {children}
     </div>
   )
 }

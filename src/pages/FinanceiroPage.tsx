@@ -61,7 +61,7 @@ export function FinanceiroPage() {
           <Stat label="Sinais retidos" value={real(sinais)} hint="Vinculados a horários futuros" />
         </Card>
         <Card>
-          <Stat label="A receber de convênio" value={real(pendente)} hint="Fora do MVP faturar TISS" />
+          <Stat label="A receber de convênio" value={real(pendente)} hint="O faturamento do convênio é feito fora daqui" />
         </Card>
         <Card>
           <Stat
@@ -76,9 +76,9 @@ export function FinanceiroPage() {
       </div>
 
       <div className="mb-5">
-        <Alert tone="success" titulo="O sinal é a alavanca mais forte contra falta">
-          Horários com sinal pago faltam 2,1% contra 18,4% do restante. É o argumento comercial
-          mais direto do produto, e ele se mede sozinho a partir da agenda.
+        <Alert tone="success" titulo="Horários com sinal pago quase não faltam">
+          Com sinal pago, a falta é de 2,1%. Sem sinal, 18,4%. O número sai da própria agenda,
+          sem ninguém precisar lançar nada.
         </Alert>
       </div>
 
@@ -95,8 +95,8 @@ export function FinanceiroPage() {
       </Card>
 
       <p className="text-faint mt-4 text-xs">
-        Financeiro completo e conciliação bancária ficam para a fase 3, por integração ou adiamento
-        (§4) — estão fora do coração de um CRM.
+        Conciliação bancária e contas a pagar não ficam aqui. Exporte os lançamentos e use seu
+        sistema contábil.
       </p>
     </PageBody>
   )

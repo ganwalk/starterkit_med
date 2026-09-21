@@ -115,13 +115,12 @@ export function MigracaoPage() {
 
       <div className="mb-5 grid gap-4 lg:grid-cols-2">
         <Alert tone="warning" icon={Alert01Icon} titulo="68 lançamentos financeiros não migraram">
-          Todos do mesmo tipo: estornos sem contrapartida no sistema de origem. Aparecem
-          nominalmente no relatório de conciliação, com o motivo — é isso que diferencia a
-          migração da Level da conversão de dados dos concorrentes (§11.2).
+          Todos do mesmo tipo: estornos sem contrapartida no sistema de origem. Cada um aparece
+          no relatório de conciliação, com o motivo e o número do registro original.
         </Alert>
         <Alert tone="info" icon={SecurityCheckIcon} titulo="Contrato de operação assinado em 18/09">
-          Nenhum arquivo foi recebido antes da assinatura. Transferência criptografada, acesso
-          restrito e eliminação dos arquivos de migração ao final, conforme §8.
+          Nenhum arquivo foi recebido antes da assinatura. A transferência é criptografada, o
+          acesso é restrito e os arquivos são apagados ao final.
         </Alert>
       </div>
 
@@ -179,8 +178,8 @@ export function MigracaoPage() {
           <div className="border-subtle border-t pt-5">
             <h3 className="text-primary mb-2 text-sm font-semibold">Garantia de saída</h3>
             <p className="text-secondary text-sm leading-relaxed">
-              A exportação completa dos dados fica disponível a qualquer momento e no cancelamento,
-              no mesmo formato de entrada (§11.2). Sem armadilha de saída.
+              Você pode exportar tudo a qualquer momento, inclusive ao cancelar, no mesmo formato
+              em que os dados entraram.
             </p>
           </div>
         </div>

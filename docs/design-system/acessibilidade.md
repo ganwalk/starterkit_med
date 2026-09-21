@@ -80,12 +80,56 @@ O script percorre o DOM em três rotas e dois temas, e reporta contraste real, t
 
 Rode antes de abrir PR. Um número que sobe é regressão.
 
-## O que a auditoria ainda não cobre
+---
 
-Fica para a próxima rodada, e vale dizer que **não foi verificado**:
+# Auditoria de teclado e leitor de tela — rodada 2
 
-- Navegação completa por teclado (ordem de foco, armadilha de foco no `Sheet`)
-- Leitor de tela real (NVDA, VoiceOver)
-- `prefers-reduced-motion`
+Script próprio (`scripts/audit-a11y.mjs`), nas 13 rotas. Mede nome acessível, ordem de foco, armadilha e devolução de foco em diálogo, marcos de página e anúncio de mudança.
+
+## Resultado
+
+| Métrica | Antes | Depois |
+| --- | --- | --- |
+| Foco entra no diálogo ao abrir | **não** | sim |
+| Foco escapa do diálogo | **22 de 25 tabs** | 0 de 25 |
+| Foco devolvido ao gatilho ao fechar | **não** | sim |
+| Abas sem `aria-controls` | 17 | 0 |
+| Rotas sem `<main>` | 2 | 0 |
+| Link de pular para o conteúdo | não existia | existe |
+| Elementos sem nome acessível | 0 | 0 |
+
+## O achado grave
+
+**O painel lateral era intransponível por teclado.** Quem abria o formulário de novo agendamento e apertava Tab ia parar na agenda atrás, sem caminho de volta — em 22 das 25 tentativas. É falha funcional, não detalhe de conformidade: o formulário simplesmente não era preenchível sem mouse.
+
+Corrigido com gestão de foco no `Sheet`: guarda quem abriu, leva o foco para o primeiro campo útil (pulando o botão de fechar), circula o Tab dentro do painel e devolve o foco ao fechar.
+
+## O `Segmented` não era um conjunto de abas
+
+Ele usava `role="tab"` sem `tabpanel` correspondente, então o leitor de tela anunciava "aba" sem ter o que abrir. Virou `role="group"` com `aria-pressed`, que descreve o que ele é de verdade: botões de alternância.
+
+O `Tabs` (sublinhado), esse sim tem painéis, e agora cada aba aponta para o seu com `aria-controls`, com as setas percorrendo as abas.
+
+## Regressão causada pelas animações
+
+A entrada da página usava `animation-fill-mode: both`, que **mantém o transform do último quadro para sempre**. Um transform vivo cria containing block, e todo `position: fixed` descendente passa a ancorar nele: o painel lateral abria 122px abaixo do topo e vazava 1051px de altura no celular.
+
+Dois consertos, os dois mantidos:
+1. `Sheet` renderiza em portal no `body` — imune a containing block de qualquer ancestral.
+2. `fill-mode: backwards` em vez de `both` — aplica o estado inicial durante o atraso e não deixa transform residual.
+
+**Regra:** `both` e `forwards` em animação com `transform` quebram `position: fixed` descendente. Use `backwards`.
+
+## Salto de foco aceito
+
+A agenda e o funil acusam 4 "saltos" na ordem de foco. É esperado: são grades em coluna, e o foco desce a primeira coluna antes de subir para o topo da segunda. A ordem é por coluna, e é isso que a leitura da grade pede.
+
+## O que ainda não foi verificado
+
+- Leitor de tela real (NVDA, VoiceOver) — a auditoria mede a estrutura ARIA, não como ela soa
 - Zoom de 200% e texto redimensionado
-- Daltonismo — hoje o status depende de cor **e** de rótulo, o que ajuda, mas não foi testado
+- Daltonismo — o status depende de cor **e** de rótulo, o que ajuda, mas não foi testado
+
+## Movimento
+
+`prefers-reduced-motion: reduce` desliga todas as animações e transições. Movimento pode provocar enjoo e desorientação em quem tem sensibilidade vestibular, e num sistema usado 8 horas por dia isso não é detalhe.

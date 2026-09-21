@@ -10,6 +10,7 @@ import {
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Avatar, Badge, Button, Card, Field, Input, Select, Sheet, StatusPill, Switch } from '@/ds'
 import { useTenant } from '@/tenant/TenantProvider'
+import { PesquisaSatisfacao } from './portal/PesquisaSatisfacao'
 
 const HISTORICO = [
   { data: '12 de agosto de 2026', profissional: 'Dra. Helena Marques', tipo: 'Retorno' },
@@ -24,7 +25,7 @@ export function PortalPage() {
   const [lembretes, setLembretes] = useState(true)
 
   return (
-    <div className="pb-20">
+    <main className="pb-20">
       {/* Zona de marca: o único lugar do sistema onde a cor da clínica ocupa
           área grande. No app da recepção isso atrapalharia a leitura o dia todo. */}
       <div
@@ -150,6 +151,8 @@ export function PortalPage() {
           </Card>
         </div>
 
+        <PesquisaSatisfacao />
+
         <Card>
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
@@ -164,7 +167,7 @@ export function PortalPage() {
         </Card>
 
         <p className="text-faint text-center text-xs">
-          {tenant.nome} · {tenant.dominio} — portal com a marca da clínica, operado pela plataforma
+          {tenant.nome} · {tenant.dominio}
         </p>
       </div>
 
@@ -209,6 +212,6 @@ export function PortalPage() {
           ))}
         </div>
       </Sheet>
-    </div>
+    </main>
   )
 }

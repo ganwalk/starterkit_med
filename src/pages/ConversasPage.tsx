@@ -18,13 +18,13 @@ export function ConversasPage() {
     <PageBody>
       <PageHeader
         titulo="Conversas"
-        resumo="Caixa compartilhada no WhatsApp oficial. O bot atende logística; o resto vai para a recepção"
+        resumo="Caixa compartilhada do WhatsApp. O assistente resolve horário; o resto vai para a recepção"
       />
 
       <div className="mb-4">
-        <Alert tone="info" icon={SparklesIcon} titulo="O bot é restrito a agendamento e logística">
-          A Resolução CFM 2.454/2026 veda delegar à IA a comunicação de diagnósticos ou condutas
-          sem mediação humana. Qualquer assunto clínico é transferido automaticamente (§8).
+        <Alert tone="info" icon={SparklesIcon} titulo="O assistente só trata de horário">
+          Ele agenda, confirma e remarca. Pergunta clínica é passada para a recepção, porque a
+          Resolução CFM 2.454/2026 não permite que a IA comunique diagnóstico ou conduta.
         </Alert>
       </div>
 
@@ -33,6 +33,7 @@ export function ConversasPage() {
           <div className="px-3 pt-3">
             <Tabs
               label="Filtrar conversas"
+              idBase="conversas"
               ativo={aba}
               onChange={setAba}
               itens={[
@@ -43,7 +44,12 @@ export function ConversasPage() {
             />
           </div>
 
-          <ul className="max-h-[32rem] overflow-y-auto">
+          <ul
+            id={`conversas-painel-${aba}`}
+            role="tabpanel"
+            aria-labelledby={`conversas-aba-${aba}`}
+            className="max-h-[32rem] overflow-y-auto"
+          >
             {lista.map((conversa) => (
               <li key={conversa.id}>
                 <button
@@ -132,7 +138,8 @@ export function ConversasPage() {
               </Button>
             </div>
             <p className="text-faint mt-2 text-2xs">
-              Envio pela API oficial. O custo por mensagem é repassado ao custo, sem margem (§10).
+              Envio pelo WhatsApp oficial. A Meta cobra por mensagem, e o valor aparece separado
+              na sua fatura.
             </p>
           </footer>
         </Card>

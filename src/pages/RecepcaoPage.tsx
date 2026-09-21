@@ -172,8 +172,7 @@ export function RecepcaoPage() {
             <h3 className="text-h4 text-primary font-semibold">Check-in por QR Code</h3>
             <p className="text-secondary mt-1 max-w-lg text-sm">
               O paciente aponta a câmera e entra na fila sozinho, sem passar pelo balcão. O código
-              muda a cada dia e carrega a marca da clínica. Totem com hardware fica para depois
-              (§4): começamos por QR Code e recepção.
+              muda a cada dia e carrega a marca da clínica.
             </p>
           </div>
         </div>

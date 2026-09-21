@@ -40,6 +40,7 @@ import {
 import type { Agendamento } from '@/data/agenda'
 import { VisaoSemana } from './agenda/VisaoSemana'
 import { VisaoMes } from './agenda/VisaoMes'
+import { NovoAgendamento } from './agenda/NovoAgendamento'
 
 const TOTAL_SLOTS = ((HORA_FIM - HORA_INICIO) * 60) / SLOT
 // 26px: altura mínima para um encaixe de 15 min caber uma linha de 11px
@@ -77,7 +78,7 @@ function CartaoAgendamento({
       }}
       className={cn(
         'bg-card group relative mx-1 flex flex-col overflow-hidden rounded-md text-left transition-base',
-        'border-subtle border shadow-xs hover:z-10 hover:shadow-md',
+        'border-subtle border shadow-xs hover:z-10 hover:-translate-y-px hover:shadow-md',
         compacto ? 'gap-0 px-2 py-1' : 'gap-0.5 px-2.5 py-1.5',
         cancelado && 'opacity-[var(--opacity-cancelled)]',
         agendamento.encaixe && 'border-dashed',
@@ -137,9 +138,16 @@ export function AgendaPage() {
   const [profSemana, setProfSemana] = useState(PROFISSIONAIS[0].id)
   const [selecionado, setSelecionado] = useState<Agendamento | null>(null)
   const [busca, setBusca] = useState('')
+  const [criando, setCriando] = useState(false)
+  // Agendamentos criados durante a sessão. Ficam em memória porque o
+  // protótipo não tem backend, mas entram na grade como qualquer outro.
+  const [criados, setCriados] = useState<Agendamento[]>([])
 
   const iso = isoDe(data)
-  const doDia = useMemo(() => agendamentosDoDia(iso), [iso])
+  const doDia = useMemo(
+    () => [...agendamentosDoDia(iso), ...criados.filter((a) => a.data === iso)],
+    [iso, criados],
+  )
 
   const filtrados = useMemo(() => {
     const termo = busca.trim().toLowerCase()
@@ -230,7 +238,12 @@ export function AgendaPage() {
                 { value: 'mes', label: 'Mês' },
               ]}
             />
-            <Button variant="accent" size="sm" icon={Add01Icon}>
+            <Button
+              variant="accent"
+              size="sm"
+              icon={Add01Icon}
+              onClick={() => setCriando(true)}
+            >
               Novo agendamento
             </Button>
           </>
@@ -306,9 +319,12 @@ export function AgendaPage() {
             gridTemplateColumns: `56px repeat(${PROFISSIONAIS.length}, minmax(0, 1fr))`,
           }}
         >
-          {/* Linha do horário atual: âncora de leitura da recepção */}
+          {/* Linha do horário atual: âncora de leitura da recepção.
+              Fica ATRÁS dos cartões — eles são opacos, então ela aparece só
+              nos vãos livres. Por cima, virava um risco sobre o nome do
+              paciente e parecia texto riscado. */}
           <div
-            className="pointer-events-none absolute right-0 left-14 z-10 flex items-center"
+            className="pointer-events-none absolute right-0 left-14 z-0 flex items-center"
             style={{ top: `${((paraMinutos(AGORA) - HORA_INICIO * 60) / SLOT) * ALTURA_SLOT + 8}px` }}
           >
             <span className="bg-danger size-2 shrink-0 rounded-full" />
@@ -370,6 +386,17 @@ export function AgendaPage() {
           Clique em um agendamento para abrir o detalhe com histórico de alterações.
         </p>
       )}
+
+      <NovoAgendamento
+        open={criando}
+        onClose={() => setCriando(false)}
+        iso={iso}
+        onCriar={(a) => {
+          setCriados((atuais) => [...atuais, a])
+          setVisao('dia')
+          setSelecionado(a)
+        }}
+      />
 
       <Sheet
         open={selecionado !== null}
@@ -448,8 +475,8 @@ export function AgendaPage() {
                 className="text-accent mt-0.5 shrink-0"
               />
               <p className="text-secondary text-xs leading-relaxed">
-                A confirmação é enviada pela API oficial do WhatsApp e grava o status direto na
-                agenda, sem segunda fonte de verdade (§11.1, item 3).
+                A confirmação vai pelo WhatsApp oficial. Quando o paciente responde, o status
+                muda aqui na agenda sozinho.
               </p>
             </div>
           </div>

@@ -52,8 +52,8 @@ export function SegurancaPage() {
 
       <div className="mb-5 grid gap-4 lg:grid-cols-2">
         <Alert tone="info" icon={Shield01Icon} titulo="A clínica é controladora, a plataforma é operadora">
-          Dado de saúde é dado sensível. O contrato de operação define os papéis, e a ANPD planeja
-          ao menos dez ações de fiscalização sobre dados de saúde até o fim de 2026 (§8).
+          Dado de saúde é dado sensível. O contrato de operação define quem responde pelo quê, e a
+          ANPD anunciou fiscalização sobre dados de saúde até o fim de 2026.
         </Alert>
         <Alert tone="warning" icon={SecurityCheckIcon} titulo="Incidente se comunica em até 3 dias úteis">
           O plano de resposta está versionado e o contato do encarregado fica publicado no portal.
@@ -84,8 +84,8 @@ export function SegurancaPage() {
                 ['Criptografia em trânsito e repouso', <Badge key="a" tone="success">Ativa</Badge>],
                 ['Backup diário verificado', <Badge key="b" tone="success">Ativo</Badge>],
                 ['Exportação completa dos dados', <Badge key="c" tone="success">Disponível sempre</Badge>],
-                ['Teste de invasão por terceiro', <Badge key="d" tone="warning">Fase 3</Badge>],
-                ['Prontuário certificado NGS2', <Badge key="e" tone="neutral">Fora do MVP</Badge>],
+                ['Teste de invasão por terceiro', <Badge key="d" tone="warning">Previsto</Badge>],
+                ['Prontuário certificado NGS2', <Badge key="e" tone="neutral">Não incluso</Badge>],
               ]}
             />
           </Card>
@@ -103,9 +103,8 @@ export function SegurancaPage() {
               ]}
             />
             <p className="text-faint mt-4 text-xs leading-relaxed">
-              A trava é por padrão: uma campanha não consegue selecionar quem não consentiu. Isso
-              e as travas de publicidade médica (CFM 2.336/2023) são o "compliance embutido" que o
-              escopo trata como janela de oportunidade, não como custo.
+              A trava é automática: uma campanha não consegue selecionar quem não aceitou. O mesmo
+              vale para as regras de publicidade médica do CFM.
             </p>
           </Card>
         </div>

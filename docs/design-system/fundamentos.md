@@ -206,4 +206,21 @@ Mais rígido que a WCAG 2.5.8 (24×24px), porque a recepção usa o sistema o di
 | `--duration-base` | 200ms |
 | `--duration-slow` | 320ms |
 
-A classe utilitária `.transition-base` cobre a maioria dos casos. Movimento é para dar continuidade entre estados, nunca para chamar atenção.
+A classe utilitária `.transition-base` cobre a maioria dos casos.
+
+### Animações de entrada
+
+| Classe | Uso |
+| --- | --- |
+| `.animate-fade-in` | Fundo escurecido de diálogo |
+| `.animate-slide-in-right` | Painel lateral |
+| `.animate-slide-in-left` | Gaveta de navegação no celular |
+| `.animate-scale-in` | Modal central, menu suspenso |
+| `.animate-rise-in` | Conteúdo de página ao navegar |
+
+Movimento é para dar continuidade entre estados — mostrar de onde uma coisa veio — e nunca para chamar atenção. Deslocamentos curtos: o painel entra 16px, não a tela inteira.
+
+**Duas regras que vieram de defeitos reais:**
+
+1. **`fill-mode` é `backwards`, nunca `both` nem `forwards`.** `both` mantém o transform do último quadro para sempre, e um transform vivo vira containing block: todo `position: fixed` descendente passa a ancorar nele. Foi assim que o painel lateral abriu 122px fora do lugar.
+2. **Tudo desliga sob `prefers-reduced-motion: reduce`.**

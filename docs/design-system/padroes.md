@@ -137,3 +137,18 @@ As três visões não são o mesmo dado em zoom diferente. Cada uma responde a u
 **Por que o mês não mostra pacientes:** não cabe, e não é o que se pergunta ali. Mostrar dois nomes e "+18" seria ruído. A carga relativa e a contagem de faltas respondem melhor, e um clique leva ao dia.
 
 **Consulta cancelada não conta como carga** no mês: ela não ocupa horário. Contá-la inflaria o dia e tornaria a barra de ocupação mentirosa.
+
+
+---
+
+## Consentimento é sempre separado da ação
+
+Um paciente que responde uma pesquisa **não autorizou** virar depoimento publicitário. Um paciente que aceita lembrete de consulta **não autorizou** receber campanha de marketing.
+
+Por isso, no sistema:
+
+- Cada consentimento tem seu próprio controle, **desligado por padrão**, e aparece junto do conteúdo a que se refere — não escondido em configurações.
+- O controle explica o que muda ao ligar, e diz que pode ser retirado depois.
+- A trava é de sistema, não de processo: uma campanha não consegue selecionar quem não consentiu.
+
+Isso atende a LGPD e a Resolução CFM 2.336/2023 (§8 do escopo), mas a razão é anterior à norma: usar um dado para uma finalidade que a pessoa não escolheu quebra a confiança que faz ela responder da próxima vez.

@@ -41,7 +41,7 @@ export function App() {
         <Route
           key={route.path}
           path={route.path}
-          element={<AppShell>{route.element}</AppShell>}
+          element={<AppShell key={route.path}>{route.element}</AppShell>}
         />
       ))}
 

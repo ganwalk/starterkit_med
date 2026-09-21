@@ -91,12 +91,22 @@ docs/            direção visual, planos e registro de decisões
 - [`auditoria-ux.md`](docs/design-system/auditoria-ux.md) — resultado da auditoria medida
 - [`docs/decisoes/`](docs/decisoes/) — registro de decisões
 
-## Verificar acessibilidade
+## Auditorias
 
-Com o dev server no ar:
+Com o `npm run dev` no ar, em outro terminal:
 
 ```bash
-node scripts/audit-ux.mjs
+npx playwright install chromium   # uma vez
+node scripts/audit-ux.mjs         # contraste, fontes, opacidades, alvos, cortes
+node scripts/audit-a11y.mjs       # teclado, foco, ARIA, marcos de página
 ```
 
-Mede contraste real, tamanhos de fonte, opacidades, alvos de toque, cortes de conteúdo e hierarquia de headings, em dois temas.
+A primeira mede o que se vê: contraste real, tamanhos de fonte fora da escala, opacidades sem token, alvos de toque, conteúdo cortado e hierarquia de headings, nos dois temas.
+
+A segunda mede o que só aparece sem mouse: nome acessível, ordem de foco, armadilha e devolução de foco em diálogo, marcos de página e anúncio de mudança.
+
+Um número que sobe é regressão. Resultados e exceções aceitas em [`docs/design-system/acessibilidade.md`](docs/design-system/acessibilidade.md).
+
+## Retratos
+
+As pessoas do protótipo usam **rostos sintéticos**, gerados por rede neural — nenhuma pessoa real. Num protótipo de saúde, associar um rosto identificável a dado clínico fabricado é problema, e estas telas são feitas para serem compartilhadas. Os arquivos ficam no repositório, não num CDN, pelo mesmo motivo que a fonte é auto-hospedada: o portal do paciente não faz requisição a terceiro.

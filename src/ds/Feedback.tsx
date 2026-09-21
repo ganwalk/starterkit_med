@@ -135,7 +135,9 @@ export function Stepper({ steps, atual }: { steps: Step[]; atual: number }) {
                 'flex size-6 shrink-0 items-center justify-center rounded-full text-2xs font-bold',
                 feito && 'bg-success-soft text-success',
                 ativo && 'bg-active text-on-active',
-                !feito && !ativo && 'bg-sunken text-faint',
+                // text-muted, não text-faint: sobre o fundo rebaixado o faint
+                // media 4.42:1 e reprovava
+                !feito && !ativo && 'bg-sunken text-muted',
               )}
               aria-hidden
             >

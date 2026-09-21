@@ -1,29 +1,47 @@
 import { useState } from 'react'
 import {
   Add01Icon,
+  Alert01Icon,
   ArrowUpRight01Icon,
   Calendar03Icon,
   Search01Icon,
+  UserMultiple02Icon,
   WhatsappIcon,
 } from '@hugeicons/core-free-icons'
 import {
+  Accordion,
+  Alert,
   Avatar,
   AvatarGroup,
   Badge,
   Button,
   Card,
   CardHeader,
+  DataList,
+  EmptyState,
   Field,
   IconButton,
   Input,
+  PageHeader,
+  Progress,
   Segmented,
   Select,
   Sheet,
+  Skeleton,
   Sparkline,
   Stat,
+  StatusDot,
+  STATUS_LABEL,
   StatusPill,
+  Stepper,
   Switch,
+  TabPanel,
+  Table,
+  Tabs,
+  Timeline,
+  Toolbar,
 } from '@/ds'
+import type { Column } from '@/ds'
 import type { AgendaStatus } from '@/ds'
 import { useTenant } from '@/tenant/TenantProvider'
 
@@ -101,9 +119,31 @@ export function DesignSystemPage() {
   const [aba, setAba] = useState('dia')
   const [notificar, setNotificar] = useState(true)
   const [sheetAberto, setSheetAberto] = useState(false)
+  const [abaExemplo, setAbaExemplo] = useState('confirmados')
+
+  const LINHAS_EXEMPLO = [
+    { id: '1', paciente: 'Ana Beatriz Rocha', horario: '08:00', valor: 250, status: 'chegou' as const },
+    { id: '2', paciente: 'Carlos Eduardo Lima', horario: '08:30', valor: 400, status: 'atendimento' as const },
+    { id: '3', paciente: 'Juliana Prado', horario: '11:00', valor: 250, status: 'faltou' as const },
+  ]
+  const COLUNAS_EXEMPLO: Column<(typeof LINHAS_EXEMPLO)[number]>[] = [
+    {
+      chave: 'paciente',
+      titulo: 'Paciente',
+      render: (l) => (
+        <div className="flex items-center gap-2.5">
+          <Avatar nome={l.paciente} size="sm" />
+          <span className="text-primary font-medium">{l.paciente}</span>
+        </div>
+      ),
+    },
+    { chave: 'horario', titulo: 'Horário', render: (l) => <span className="tabular">{l.horario}</span> },
+    { chave: 'status', titulo: 'Status', render: (l) => <StatusPill status={l.status} /> },
+    { chave: 'valor', titulo: 'Valor', numerico: true, render: (l) => `R$ ${l.valor}` },
+  ]
 
   return (
-    <div className="mx-auto max-w-[1400px] px-6 py-12">
+    <main className="mx-auto max-w-[1400px] px-6 py-12">
       <div className="mb-14 max-w-3xl">
         <h1 className="text-h1 text-primary font-light tracking-[-0.03em]">
           Design system white label
@@ -160,6 +200,17 @@ export function DesignSystemPage() {
             <div className="flex flex-wrap gap-2">
               {STATUS_LIST.map((status) => (
                 <StatusPill key={status} status={status} />
+              ))}
+            </div>
+            <p className="text-muted mt-4 mb-2 text-sm">
+              Versão compacta, para linhas densas da agenda:
+            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              {STATUS_LIST.map((status) => (
+                <span key={status} className="flex items-center gap-1.5">
+                  <StatusDot status={status} />
+                  <span className="text-secondary text-xs">{STATUS_LABEL[status]}</span>
+                </span>
               ))}
             </div>
           </div>
@@ -409,6 +460,191 @@ export function DesignSystemPage() {
         </div>
       </Section>
 
+      <Section
+        title="Moldura de página"
+        description="PageBody e PageHeader dão a mesma largura máxima, respiro e altura de cabeçalho a todas as telas do app. Toda tela começa por eles."
+      >
+        <Card padding="none" className="overflow-hidden">
+          <div className="border-subtle border-b border-dashed p-6">
+            <PageHeader
+              titulo="Título da tela"
+              resumo="O resumo carrega o que o título não diz — contagem, contexto, origem. Nunca repete o título."
+              acoes={
+                <>
+                  <Button variant="subtle" size="sm">
+                    Secundária
+                  </Button>
+                  <Button variant="accent" size="sm" icon={Add01Icon}>
+                    Ação principal
+                  </Button>
+                </>
+              }
+            />
+          </div>
+          <p className="text-faint p-6 text-xs">
+            Uma única ação <code className="font-mono">accent</code> por tela. Se parecem existir
+            duas ações principais, uma delas é secundária.
+          </p>
+        </Card>
+      </Section>
+
+      <Section
+        title="Tabela"
+        description="A tabela rola dentro do próprio container em tela estreita. A página nunca rola no eixo X."
+      >
+        <Card padding="none">
+          <Table
+            label="Exemplo de tabela"
+            colunas={COLUNAS_EXEMPLO}
+            linhas={LINHAS_EXEMPLO}
+            chaveDe={(l) => l.id}
+          />
+        </Card>
+      </Section>
+
+      <Section
+        title="Comunicação"
+        description="Alerta carrega informação persistente e contextual. Estado vazio sempre traz o próximo passo."
+      >
+        <div className="grid gap-5 lg:grid-cols-2">
+          <div className="space-y-3">
+            <Alert tone="info" icon={Alert01Icon} titulo="Informação">
+              Contexto que evita um erro antes dele acontecer.
+            </Alert>
+            <Alert tone="success" titulo="Deu certo">
+              Confirmação de algo concluído.
+            </Alert>
+            <Alert tone="warning" titulo="Exige ação, mas não agora" acao={<Button size="sm" variant="subtle">Ver</Button>}>
+              Quando o alerta pede ação, ele carrega o botão.
+            </Alert>
+            <Alert tone="danger" titulo="Quebrou ou vai quebrar agora">
+              Reservado para o que não pode esperar.
+            </Alert>
+          </div>
+
+          <Card padding="none">
+            <EmptyState
+              icon={UserMultiple02Icon}
+              titulo="Nenhum paciente encontrado"
+              descricao="Diga o próximo passo, não só que está vazio. Um estado vazio sem ação é um beco sem saída."
+              acao={<Button variant="subtle">Importar base</Button>}
+            />
+          </Card>
+        </div>
+      </Section>
+
+      <Section
+        title="Progresso e processo"
+        description="Barra para proporção, passos para processo de várias etapas, esqueleto para carregamento."
+      >
+        <div className="grid gap-5 lg:grid-cols-2">
+          <Card>
+            <CardHeader title="Progresso" />
+            <div className="space-y-4">
+              <Progress valor={92} label="Ocupação da Dra. Helena" mostrarValor />
+              <Progress valor={64} label="Migração de pacientes" tone="success" mostrarValor />
+              <Progress valor={88} label="Risco de SLA" tone="danger" mostrarValor />
+            </div>
+            <div className="mt-6">
+              <Stepper
+                steps={[
+                  { id: 'a', titulo: 'Paciente' },
+                  { id: 'b', titulo: 'Horário' },
+                  { id: 'c', titulo: 'Confirmação' },
+                ]}
+                atual={1}
+              />
+            </div>
+          </Card>
+
+          <Card>
+            <CardHeader title="Carregando" caption="Esqueleto na forma do conteúdo final" />
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <Skeleton className="size-9 rounded-full" />
+                <div className="flex-1 space-y-1.5">
+                  <Skeleton className="h-3 w-1/2" />
+                  <Skeleton className="h-2.5 w-1/3" />
+                </div>
+              </div>
+              <Skeleton className="h-3 w-full" />
+              <Skeleton className="h-3 w-4/5" />
+            </div>
+          </Card>
+        </div>
+      </Section>
+
+      <Section
+        title="Navegação interna"
+        description="Abas trocam o assunto; o controle segmentado troca a lente do mesmo conteúdo. Não são intercambiáveis."
+      >
+        <Card>
+          <Toolbar fim={<Button size="sm" variant="subtle">Ação</Button>}>
+            <Input icon={Search01Icon} placeholder="Filtro da barra de ferramentas" />
+          </Toolbar>
+
+          <Tabs
+            label="Exemplo de abas"
+            idBase="ds-exemplo"
+            ativo={abaExemplo}
+            onChange={setAbaExemplo}
+            itens={[
+              { id: 'confirmados', label: 'Confirmados', contador: 13 },
+              { id: 'pendentes', label: 'Pendentes', contador: 5 },
+              { id: 'faltas', label: 'Faltas', contador: 1 },
+            ]}
+          />
+          <div className="pt-4">
+            <TabPanel idBase="ds-exemplo" id={abaExemplo} ativo>
+              <p className="text-secondary text-sm">
+                Conteúdo da aba <strong className="text-primary">{abaExemplo}</strong>. Cada aba
+                aponta para o painel que controla, e as setas percorrem as abas.
+              </p>
+            </TabPanel>
+          </div>
+
+          <div className="border-subtle mt-6 border-t pt-5">
+            <Accordion titulo="Seção colapsável" aberto>
+              <p className="text-secondary text-sm">
+                Para conteúdo secundário que a maioria não precisa ver de imediato.
+              </p>
+            </Accordion>
+            <Accordion titulo="Outra seção">
+              <p className="text-secondary text-sm">Fechada por padrão.</p>
+            </Accordion>
+          </div>
+        </Card>
+      </Section>
+
+      <Section
+        title="Detalhe e histórico"
+        description="Pares de rótulo e valor no painel de detalhe; linha do tempo para histórico de alterações."
+      >
+        <div className="grid gap-5 lg:grid-cols-2">
+          <Card>
+            <CardHeader title="Lista de dados" />
+            <DataList
+              itens={[
+                ['Tipo', 'Retorno · 30 min'],
+                ['Convênio', 'Particular'],
+                ['Origem', 'Instagram'],
+                ['Sinal', <Badge key="s" tone="success">Pago via Pix</Badge>],
+              ]}
+            />
+          </Card>
+          <Card>
+            <CardHeader title="Linha do tempo" />
+            <Timeline
+              eventos={[
+                { quando: 'Hoje, 07:58', quem: 'Recepção · Marina', oque: 'Check-in registrado', tone: 'success' },
+                { quando: 'Ontem, 18:02', quem: 'Paciente', oque: 'Confirmou pelo WhatsApp', tone: 'accent' },
+                { quando: '12/09, 10:31', quem: 'Recepção · Marina', oque: 'Agendamento criado' },
+              ]}
+            />
+          </Card>
+        </div>
+      </Section>
+
       <Sheet
         open={sheetAberto}
         onClose={() => setSheetAberto(false)}
@@ -446,6 +682,6 @@ export function DesignSystemPage() {
           </div>
         </div>
       </Sheet>
-    </div>
+    </main>
   )
 }

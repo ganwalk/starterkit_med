@@ -5,21 +5,8 @@ import { Cancel01Icon, Menu01Icon, Notification03Icon, Search01Icon } from '@hug
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Avatar, IconButton } from '@/ds'
 import { cn } from '@/lib/cn'
-import { useTenant } from '@/tenant/TenantProvider'
 import { NAV } from './navigation'
 import { TenantSwitcher } from './TenantSwitcher'
-
-function Marca() {
-  const { tenant } = useTenant()
-  return (
-    <div className="flex min-w-0 items-center gap-2.5">
-      <span className="bg-accent size-7 shrink-0 rounded-md" aria-hidden />
-      <span className="text-primary truncate text-h4 font-extrabold tracking-[-0.02em]">
-        {tenant.marca}
-      </span>
-    </div>
-  )
-}
 
 function NavLista({ onNavigate }: { onNavigate?: () => void }) {
   return (
@@ -81,15 +68,43 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="bg-page min-h-screen">
+      {/* Primeiro alvo do Tab: pula a navegação, que tem 11 itens repetidos
+          em toda tela. Só aparece quando recebe foco. */}
+      <a
+        href="#conteudo"
+        className="bg-active text-on-active sr-only rounded-md px-4 py-2 text-sm font-semibold focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-[60]"
+      >
+        Pular para o conteúdo
+      </a>
+
       {/* Sidebar fixa no desktop */}
       <aside className="border-subtle bg-card fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r px-4 py-5 lg:flex">
-        <div className="mb-8 px-3">
-          <Marca />
+        <div className="mb-8 px-1">
+          <TenantSwitcher />
         </div>
         <div className="min-h-0 flex-1 overflow-y-auto">
           <NavLista />
         </div>
-        <div className="border-subtle mt-4 flex items-center gap-3 border-t px-3 pt-4">
+        {/* Portal e design system não são telas da recepção: um é do
+            paciente, o outro é referência do time. Ficam fora dos grupos
+            principais, mas precisam ser alcançáveis pela interface. */}
+        <div className="border-subtle mt-4 flex flex-col gap-0.5 border-t pt-3">
+          {[
+            { to: '/portal', label: 'Portal do paciente' },
+            { to: '/design-system', label: 'Design system' },
+          ].map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className="text-muted hover:bg-hover hover:text-primary flex min-h-[var(--target-min)] items-center gap-2 rounded-md px-3 text-xs font-medium transition-base"
+            >
+              <span aria-hidden>↗</span>
+              {item.label}
+            </NavLink>
+          ))}
+        </div>
+
+        <div className="border-subtle mt-3 flex items-center gap-3 border-t px-3 pt-4">
           <Avatar nome="Marina Prado" size="sm" />
           <div className="min-w-0 flex-1">
             <p className="text-primary truncate text-xs font-semibold">Marina Prado</p>
@@ -100,15 +115,16 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       {/* Gaveta no celular e tablet */}
       {gavetaAberta && (
-        <div className="fixed inset-0 z-50 lg:hidden">
+        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Menu de navegação">
           <button
             aria-label="Fechar menu"
+            tabIndex={-1}
             onClick={() => setGavetaAberta(false)}
-            className="absolute inset-0 bg-[rgba(12,14,19,0.4)]"
+            className="animate-fade-in absolute inset-0 bg-[rgba(12,14,19,0.4)]"
           />
-          <div className="bg-card relative flex h-full w-[17rem] max-w-[85vw] flex-col px-4 py-5 shadow-xl">
-            <div className="mb-8 flex items-center justify-between px-3">
-              <Marca />
+          <div className="bg-card animate-slide-in-left relative flex h-full w-[17rem] max-w-[85vw] flex-col px-4 py-5 shadow-xl">
+            <div className="mb-8 flex items-center justify-between gap-2 px-1">
+              <TenantSwitcher />
               <IconButton
                 icon={Cancel01Icon}
                 label="Fechar menu"
@@ -118,6 +134,22 @@ export function AppShell({ children }: { children: ReactNode }) {
             </div>
             <div className="min-h-0 flex-1 overflow-y-auto">
               <NavLista onNavigate={() => setGavetaAberta(false)} />
+              <div className="border-subtle mt-6 flex flex-col gap-0.5 border-t pt-3">
+                {[
+                  { to: '/portal', label: 'Portal do paciente' },
+                  { to: '/design-system', label: 'Design system' },
+                ].map((item) => (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    onClick={() => setGavetaAberta(false)}
+                    className="text-muted hover:bg-hover hover:text-primary flex min-h-[var(--target-min)] items-center gap-2 rounded-md px-3 text-xs font-medium transition-base"
+                  >
+                    <span aria-hidden>↗</span>
+                    {item.label}
+                  </NavLink>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -135,7 +167,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </button>
 
             <div className="lg:hidden">
-              <Marca />
+              <TenantSwitcher />
             </div>
 
             {/* Busca some no celular para o cabeçalho caber sem estourar */}
@@ -154,21 +186,15 @@ export function AppShell({ children }: { children: ReactNode }) {
             </div>
 
             <div className="ml-auto flex shrink-0 items-center gap-2">
-              <div className="hidden xl:block">
-                <TenantSwitcher />
-              </div>
               <IconButton icon={Notification03Icon} label="Notificações" size="sm" />
             </div>
           </div>
 
-          {/* Em telas menores o seletor de clínica ganha a própria faixa,
-              em vez de espremer o cabeçalho e causar scroll horizontal. */}
-          <div className="border-subtle overflow-x-auto border-t px-4 py-2 sm:px-6 xl:hidden">
-            <TenantSwitcher />
-          </div>
         </header>
 
-        <main className="min-w-0">{children}</main>
+        <main id="conteudo" tabIndex={-1} className="min-w-0 focus:outline-none">
+          {children}
+        </main>
       </div>
     </div>
   )
