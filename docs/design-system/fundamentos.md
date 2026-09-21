@@ -84,9 +84,18 @@ O único grupo que varia por tenant, em `themes.css`:
 --accent-soft       fundo de destaque leve
 --accent-muted      fundo de destaque médio
 --accent-contrast   texto sobre o acento
+--accent-text       o acento usado COMO TEXTO
 ```
 
 Um tenant redefine só `--brand-50/100/500/600/contrast`. A ponte para `--accent` é automática.
+
+**`--accent` e `--accent-text` não são a mesma coisa no escuro.** Como fundo de botão, o acento continua saturado — lá quem carrega o contraste é o texto branco por cima. Como texto, ele obedece à mesma regra dos neutros e sobe na escala: `#2f5fe0` sobre o próprio tom suave dá 3,15:1, e era assim que o bloco de data do portal e o link "Como chegar" reprovavam no tema escuro. Por isso `text-accent-text`, e não `text-accent`.
+
+### Cor personalizada da clínica
+
+Um tenant do catálogo traz as cinco variáveis escritas à mão. A clínica que cola o hexadecimal dela tem uma só, e `rampaDeMarca()` deriva o resto: `50` e `100` misturando com branco, `600` escurecendo. A rampa é escrita como estilo inline no `<html>`, e por isso ganha da regra `[data-tenant=...]` por especificidade — é o que faz a escolha valer no produto inteiro, e não só num retângulo de prévia.
+
+O campo aceita digitação parcial (`#0f7`), que ainda não é cor. A rampa só troca quando o hexadecimal fecha; até lá vale a anterior, senão a tela pisca a cada tecla.
 
 ---
 

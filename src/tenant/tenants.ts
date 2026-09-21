@@ -23,7 +23,7 @@ export const TENANTS: Tenant[] = [
     nome: 'Aurora',
     marca: 'Aurora',
     dominio: 'aurora.app',
-    especialidade: 'Produto',
+    especialidade: 'Clínica geral',
     amostra: '#2f5fe0',
   },
   {

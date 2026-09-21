@@ -57,7 +57,12 @@ const COLETA = () => {
 
   const focaveis = [...document.querySelectorAll(SELETOR_FOCAVEL)].filter((el) => {
     const r = el.getBoundingClientRect()
-    return r.width > 0 && r.height > 0
+    if (r.width === 0 || r.height === 0) return false
+    // Fora da árvore de acessibilidade de propósito: um controle nativo que
+    // só existe para ser acionado por outro elemento (o seletor de cor que o
+    // selo da marca abre) não tem nome porque não deve ser anunciado. Cobrar
+    // nome dele é cobrar o oposto do que o atributo pede.
+    return !el.closest('[aria-hidden="true"]')
   })
   out.focaveis = focaveis.length
 

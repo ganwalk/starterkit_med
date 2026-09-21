@@ -71,6 +71,13 @@ export interface SwitchProps {
   hideLabel?: boolean
 }
 
+/**
+ * `flex w-fit`, nunca `inline-flex`: elemento inline ignora margem vertical,
+ * então três Switch dentro de um `space-y-4` ficavam lado a lado na mesma
+ * linha, cada rótulo por baixo do trilho do seguinte. `w-fit` mantém o alvo
+ * do tamanho do conteúdo — em bloco de largura total, metade do clique cai
+ * num vazio à direita do rótulo.
+ */
 export function Switch({ checked, onChange, label, hideLabel = false }: SwitchProps) {
   return (
     <button
@@ -79,7 +86,7 @@ export function Switch({ checked, onChange, label, hideLabel = false }: SwitchPr
       aria-checked={checked}
       aria-label={hideLabel ? label : undefined}
       onClick={() => onChange(!checked)}
-      className="inline-flex min-h-[var(--target-min)] items-center gap-2.5"
+      className="flex min-h-[var(--target-min)] w-fit items-center gap-2.5 text-left"
     >
       <span
         className={cn(

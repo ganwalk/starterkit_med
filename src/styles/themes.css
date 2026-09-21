@@ -58,10 +58,18 @@
   --accent-soft: var(--brand-50);
   --accent-muted: var(--brand-100);
   --accent-contrast: var(--brand-contrast);
+  /* Acento como TEXTO. No claro é a própria cor da marca */
+  --accent-text: var(--brand-500);
 }
 
 [data-theme='dark'] {
   /* No escuro o acento precisa clarear para manter contraste sobre fundo preto */
   --accent-soft: color-mix(in srgb, var(--brand-500) 16%, transparent);
   --accent-muted: color-mix(in srgb, var(--brand-500) 28%, transparent);
+
+  /* Mesma regra dos neutros: no escuro, texto sobe na escala. O azul da
+     marca sobre o próprio tom suave dava 3.15:1 — o bloco de data do portal
+     e o link "Como chegar" reprovavam. Como FUNDO de botão o acento
+     continua saturado, porque lá quem carrega o contraste é o texto branco. */
+  --accent-text: color-mix(in srgb, var(--brand-500) 55%, #ffffff);
 }

@@ -33,6 +33,7 @@
   --color-accent-soft: var(--accent-soft);
   --color-accent-muted: var(--accent-muted);
   --color-accent-contrast: var(--accent-contrast);
+  --color-accent-text: var(--accent-text);
 
   --color-active: var(--active-bg);
   --color-on-active: var(--active-fg);

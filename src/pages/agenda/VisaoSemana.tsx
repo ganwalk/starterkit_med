@@ -106,7 +106,7 @@ export function VisaoSemana({
                   onClick={() => onVerDia(iso)}
                   className="border-subtle hover:bg-hover border-l px-2 py-2.5 text-center transition-base"
                 >
-                  <p className={cn('text-2xs font-semibold uppercase', ehHoje ? 'text-accent' : 'text-muted')}>
+                  <p className={cn('text-2xs font-semibold uppercase', ehHoje ? 'text-accent-text' : 'text-muted')}>
                     {DIAS_CURTOS[data.getDay()]}
                   </p>
                   <p

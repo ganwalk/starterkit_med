@@ -39,11 +39,34 @@ const AUDIT = () => {
     const p = m[1].split(',').map((x) => parseFloat(x))
     return { rgb: [p[0], p[1], p[2]], a: p[3] === undefined ? 1 : p[3] }
   }
+  // Primeira parada de cor de um gradiente. Sem isto, o fundo de qualquer
+  // herói com `background: linear-gradient(...)` é invisível para a auditoria:
+  // backgroundColor vem transparente, a subida para no <html> e o texto branco
+  // do portal era medido contra branco — 1.06:1 de falso positivo, que é
+  // justamente o tipo de ruído que faz uma falha real passar despercebida.
+  const gradienteDe = (cs) => {
+    const img = cs.backgroundImage
+    if (!img || img === 'none' || !img.includes('gradient')) return null
+    const m = img.match(/rgba?\([^)]+\)/g)
+    if (!m) return null
+    const cores = m.map(parseRGB).filter((c) => c && c.a > 0.5)
+    if (!cores.length) return null
+    // Média das paradas: aproximação honesta para um fundo que varia
+    const soma = cores.reduce(
+      (acc, c) => [acc[0] + c.rgb[0], acc[1] + c.rgb[1], acc[2] + c.rgb[2]],
+      [0, 0, 0],
+    )
+    return soma.map((v) => Math.round(v / cores.length))
+  }
+
   const bgOf = (el) => {
     let node = el
     while (node && node !== document.documentElement) {
-      const c = parseRGB(getComputedStyle(node).backgroundColor)
+      const cs = getComputedStyle(node)
+      const c = parseRGB(cs.backgroundColor)
       if (c && c.a > 0.5) return c.rgb
+      const g = gradienteDe(cs)
+      if (g) return g
       node = node.parentElement
     }
     return [255, 255, 255]

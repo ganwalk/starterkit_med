@@ -1,3 +1,4 @@
+import { Marca } from '@/ds'
 import { useEffect, useId, useRef, useState } from 'react'
 import { Moon02Icon, Sun03Icon, Tick02Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -42,7 +43,7 @@ export function TenantSwitcher() {
         aria-label={`Clínica atual: ${tenant.nome}. Trocar de clínica`}
         className="hover:bg-hover flex min-h-[var(--target-comfortable)] items-center gap-2.5 rounded-pill pr-3 pl-1.5 transition-base"
       >
-        <span className="bg-accent size-7 shrink-0 rounded-md" aria-hidden />
+        <Marca />
         <span className="text-primary text-h4 font-extrabold tracking-[-0.02em]">
           {tenant.marca}
         </span>
@@ -86,7 +87,7 @@ export function TenantSwitcher() {
                     icon={Tick02Icon}
                     size={16}
                     strokeWidth={2.5}
-                    className="text-accent shrink-0"
+                    className="text-accent-text shrink-0"
                   />
                 )}
               </button>
