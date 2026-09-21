@@ -25,7 +25,7 @@ export function PortalPage() {
   const [lembretes, setLembretes] = useState(true)
 
   return (
-    <div className="pb-20">
+    <main className="pb-20">
       {/* Zona de marca: o único lugar do sistema onde a cor da clínica ocupa
           área grande. No app da recepção isso atrapalharia a leitura o dia todo. */}
       <div
@@ -167,7 +167,7 @@ export function PortalPage() {
         </Card>
 
         <p className="text-faint text-center text-xs">
-          {tenant.nome} · {tenant.dominio} — portal com a marca da clínica, operado pela plataforma
+          {tenant.nome} · {tenant.dominio}
         </p>
       </div>
 
@@ -212,6 +212,6 @@ export function PortalPage() {
           ))}
         </div>
       </Sheet>
-    </div>
+    </main>
   )
 }

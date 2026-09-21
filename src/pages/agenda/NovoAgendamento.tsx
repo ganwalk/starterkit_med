@@ -173,7 +173,7 @@ export function NovoAgendamento({ open, onClose, iso, onCriar }: NovoAgendamento
         {/* ---------------------------------------------------- Paciente */}
         {etapa === 0 && (
           <div className="space-y-5">
-            <Field label="Buscar paciente" hint="Cadastro único: o mesmo paciente serve agenda, funil e portal">
+            <Field label="Buscar paciente" hint="O mesmo cadastro serve a agenda, o funil e o portal">
               {(id) => (
                 <Input
                   id={id}
@@ -289,7 +289,7 @@ export function NovoAgendamento({ open, onClose, iso, onCriar }: NovoAgendamento
                   </Select>
                 )}
               </Field>
-              <Field label="Convênio" hint="Campo previsto desde o MVP (§4)">
+              <Field label="Convênio">
                 {(id) => (
                   <Select id={id} value={convenio} onChange={(e) => setConvenio(e.target.value)}>
                     {CONVENIOS.map((c) => (
@@ -377,22 +377,20 @@ export function NovoAgendamento({ open, onClose, iso, onCriar }: NovoAgendamento
 
             {pedirSinal && (
               <Alert tone="success" icon={Tick02Icon}>
-                Horários com sinal pago faltam 2,1% contra 18,4% do restante. É a alavanca mais
-                forte contra falta.
+                Com sinal pago, a falta é de 2,1%. Sem sinal, 18,4%.
               </Alert>
             )}
 
             {!paciente && (
               <Alert tone="info" icon={SecurityCheckIcon}>
-                Paciente novo: o consentimento de comunicação fica registrado no cadastro, separado
-                do consentimento de marketing (§8).
+                Paciente novo: o aceite para receber mensagens fica registrado no cadastro,
+                separado do aceite para campanhas.
               </Alert>
             )}
 
             {confirmarWhats && (
               <Alert tone="neutral" icon={WhatsappIcon}>
-                A resposta do paciente grava o status direto na agenda, sem segunda fonte de
-                verdade.
+                Quando o paciente responder, o status muda sozinho aqui na agenda.
               </Alert>
             )}
           </div>

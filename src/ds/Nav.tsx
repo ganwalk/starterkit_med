@@ -14,8 +14,15 @@ export interface SegmentedProps<T extends string> {
 }
 
 /**
- * Navegação em pílula com o item ativo em preto sólido (princípio 4).
- * O ativo não usa a cor da marca de propósito: funciona igual em toda clínica.
+ * Controle segmentado: escolhe uma entre N lentes do mesmo conteúdo.
+ *
+ * Usa `role="group"` com `aria-pressed` em cada botão, e não `role="tab"`.
+ * Aba exige um `tabpanel` correspondente, e a auditoria de leitor de tela
+ * mostrou o sistema anunciando "aba" sem painel que a acompanhasse. Botão
+ * de alternância descreve o que isto é de verdade e continua alcançável
+ * por Tab, sem roving tabindex.
+ *
+ * O item ativo é preto, não a cor da marca (ver direcao-visual, princípio 4).
  */
 export function Segmented<T extends string>({
   options,
@@ -26,7 +33,7 @@ export function Segmented<T extends string>({
 }: SegmentedProps<T>) {
   return (
     <div
-      role="tablist"
+      role="group"
       aria-label={label}
       className={cn(
         'bg-sunken inline-flex items-center rounded-pill',
@@ -38,11 +45,11 @@ export function Segmented<T extends string>({
         return (
           <button
             key={option.value}
-            role="tab"
-            aria-selected={selected}
+            type="button"
+            aria-pressed={selected}
             onClick={() => onChange(option.value)}
             className={cn(
-              'rounded-pill font-medium transition-base whitespace-nowrap',
+              'rounded-pill font-medium whitespace-nowrap transition-base',
               size === 'sm'
                 ? 'min-h-[var(--target-min)] px-3.5 text-xs'
                 : 'min-h-[var(--target-comfortable)] px-4 text-sm',

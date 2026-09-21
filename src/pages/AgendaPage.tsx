@@ -78,7 +78,7 @@ function CartaoAgendamento({
       }}
       className={cn(
         'bg-card group relative mx-1 flex flex-col overflow-hidden rounded-md text-left transition-base',
-        'border-subtle border shadow-xs hover:z-10 hover:shadow-md',
+        'border-subtle border shadow-xs hover:z-10 hover:-translate-y-px hover:shadow-md',
         compacto ? 'gap-0 px-2 py-1' : 'gap-0.5 px-2.5 py-1.5',
         cancelado && 'opacity-[var(--opacity-cancelled)]',
         agendamento.encaixe && 'border-dashed',
@@ -319,9 +319,12 @@ export function AgendaPage() {
             gridTemplateColumns: `56px repeat(${PROFISSIONAIS.length}, minmax(0, 1fr))`,
           }}
         >
-          {/* Linha do horário atual: âncora de leitura da recepção */}
+          {/* Linha do horário atual: âncora de leitura da recepção.
+              Fica ATRÁS dos cartões — eles são opacos, então ela aparece só
+              nos vãos livres. Por cima, virava um risco sobre o nome do
+              paciente e parecia texto riscado. */}
           <div
-            className="pointer-events-none absolute right-0 left-14 z-10 flex items-center"
+            className="pointer-events-none absolute right-0 left-14 z-0 flex items-center"
             style={{ top: `${((paraMinutos(AGORA) - HORA_INICIO * 60) / SLOT) * ALTURA_SLOT + 8}px` }}
           >
             <span className="bg-danger size-2 shrink-0 rounded-full" />
@@ -472,8 +475,8 @@ export function AgendaPage() {
                 className="text-accent mt-0.5 shrink-0"
               />
               <p className="text-secondary text-xs leading-relaxed">
-                A confirmação é enviada pela API oficial do WhatsApp e grava o status direto na
-                agenda, sem segunda fonte de verdade (§11.1, item 3).
+                A confirmação vai pelo WhatsApp oficial. Quando o paciente responde, o status
+                muda aqui na agenda sozinho.
               </p>
             </div>
           </div>

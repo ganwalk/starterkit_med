@@ -118,7 +118,7 @@ export function SuportePage() {
 
       <div className="grid gap-5 lg:grid-cols-2">
         <Card>
-          <CardHeader title="SLA por severidade" caption="Compromisso contratual, conforme §11.3" />
+          <CardHeader title="SLA por severidade" caption="Compromisso contratual com a clínica" />
           <DataList
             itens={[
               ['Crítica — agenda fora do ar, perda de dados', `${SLA_MINUTOS.critica} min, a qualquer hora`],
@@ -155,8 +155,8 @@ export function SuportePage() {
           </div>
           <Alert tone="warning" icon={CustomerSupportIcon} className="mt-5">
             <span>
-              Gatilho de contratação: revisar a cada 5 clínicas novas. Com três sócios dividindo
-              suporte, vendas e produto, o plantão não se sustenta sozinho por muito tempo (§11.3).
+              Revisar a escala a cada 5 clínicas novas. Com três pessoas dividindo suporte, vendas
+              e produto, o plantão não se sustenta sozinho por muito tempo.
             </span>
           </Alert>
         </Card>

@@ -1,4 +1,5 @@
 import { cn } from '@/lib/cn'
+import { retratoDe } from './faces'
 
 type AvatarSize = 'xs' | 'sm' | 'md' | 'lg'
 
@@ -38,19 +39,40 @@ export interface AvatarProps {
   active?: boolean
 }
 
-/** Avatar é conteúdo, não enfeite (princípio 9) */
+/**
+ * Avatar é conteúdo, não enfeite (princípio 9): a agenda é multiprofissional
+ * e a pessoa precisa ser reconhecível de relance.
+ *
+ * Mostra o retrato quando existe um para o nome, e cai nas iniciais quando
+ * não existe — é o caso dos pacientes gerados da agenda, que são muitos.
+ */
 export function Avatar({ nome, size = 'md', className, active = false }: AvatarProps) {
+  const retrato = retratoDe(nome)
+
+  const base = cn(
+    'inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full font-semibold select-none',
+    SIZES[size],
+    active && 'ring-2 ring-accent ring-offset-2 ring-offset-[var(--surface-card)]',
+    className,
+  )
+
+  if (retrato) {
+    return (
+      <img
+        src={retrato}
+        // O nome já aparece ao lado em todo uso; repetir aqui faria o leitor
+        // de tela anunciar a pessoa duas vezes.
+        alt=""
+        loading="lazy"
+        decoding="async"
+        title={nome}
+        className={cn(base, 'bg-sunken object-cover')}
+      />
+    )
+  }
+
   return (
-    <span
-      title={nome}
-      className={cn(
-        'inline-flex shrink-0 items-center justify-center rounded-full font-semibold select-none',
-        SIZES[size],
-        surfaceFor(nome),
-        active && 'ring-2 ring-accent ring-offset-2 ring-offset-[var(--surface-card)]',
-        className,
-      )}
-    >
+    <span title={nome} className={cn(base, surfaceFor(nome))}>
       {initials(nome)}
     </span>
   )

@@ -60,6 +60,10 @@ const AUDIT = () => {
     const cs = getComputedStyle(el)
     const rect = el.getBoundingClientRect()
     if (rect.width === 0 && rect.height === 0) continue
+    // sr-only: visível só para leitor de tela. O recorte de 1px é o
+    // comportamento correto, não um corte de conteúdo.
+    if (cs.clip === 'rect(0px, 0px, 0px, 0px)' || cs.clipPath === 'inset(50%)') continue
+    if (rect.width <= 1 && rect.height <= 1) continue
 
     const hasText = [...el.childNodes].some(
       (n) => n.nodeType === 3 && n.textContent.trim().length > 0,
@@ -159,6 +163,9 @@ const AUDIT = () => {
   for (const el of interactive) {
     const r = el.getBoundingClientRect()
     if (r.width === 0 || r.height === 0) continue
+    // sr-only não é alvo de toque: só existe para leitor de tela
+    const cs2 = getComputedStyle(el)
+    if (cs2.clip === 'rect(0px, 0px, 0px, 0px)' || cs2.clipPath === 'inset(50%)') continue
     if (r.height < 32 || r.width < 32) {
       out.smallTargets.push({
         tag: el.tagName.toLowerCase(),

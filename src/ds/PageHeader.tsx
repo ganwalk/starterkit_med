@@ -13,7 +13,10 @@ export function PageHeader({ titulo, resumo, acoes, children }: PageHeaderProps)
   return (
     <div className="mb-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="min-w-0">
+        {/* aria-live: trocar de dia ou de visão na agenda muda o título sem
+            recarregar a página, e sem isto a mudança passa despercebida
+            para quem usa leitor de tela. */}
+        <div className="min-w-0" aria-live="polite">
           <h1 className="text-h2 text-primary font-bold tracking-[-0.02em]">{titulo}</h1>
           {resumo && <p className="text-secondary mt-1 text-sm">{resumo}</p>}
         </div>
@@ -26,5 +29,9 @@ export function PageHeader({ titulo, resumo, acoes, children }: PageHeaderProps)
 
 /** Container padrão de página: largura máxima e respiro iguais em toda tela. */
 export function PageBody({ children }: { children: ReactNode }) {
-  return <div className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 sm:py-8">{children}</div>
+  return (
+    <div className="animate-rise-in mx-auto max-w-[1400px] px-4 py-6 sm:px-6 sm:py-8">
+      {children}
+    </div>
+  )
 }

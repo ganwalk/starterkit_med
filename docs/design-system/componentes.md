@@ -106,9 +106,13 @@ Placeholder pulsante durante carregamento. `aria-hidden`.
 
 Pílula com o item ativo em preto. Para **alternar a visão do mesmo conteúdo** (dia/semana/mês, período).
 
+Usa `role="group"` com `aria-pressed`, **não** `role="tab"`: aba exige um painel correspondente, e sem ele o leitor de tela anuncia "aba" sem ter o que abrir.
+
 ### Tabs
 
 Sublinhado, com contador opcional. Para **navegar entre conteúdos diferentes** dentro de uma tela. Rola no eixo X quando não cabe.
+
+Exige `idBase`, que amarra cada aba ao seu `<TabPanel>` via `aria-controls`. Setas esquerda e direita percorrem as abas.
 
 > Segmented e Tabs não são intercambiáveis: um troca a lente, o outro troca o assunto.
 
@@ -146,7 +150,9 @@ A área de toque tem 32px mesmo com o trilho visual de 24px.
 
 ### Sheet
 
-Painel lateral (`side`) ou modal central (`center`). Fecha com Escape e com clique no fundo. `subtitle` carrega o contexto que o título não tem.
+Painel lateral (`side`) ou modal central (`center`). Fecha com Escape e com clique no fundo.
+
+Renderiza em **portal no `body`** e faz gestão completa de foco: guarda quem abriu, leva o foco ao primeiro campo útil, circula o Tab dentro do painel e devolve o foco ao fechar. Trava o scroll do fundo enquanto está aberto. `subtitle` carrega o contexto que o título não tem.
 
 `side` para detalhe de registro; `center` para confirmação e escolha curta.
 
@@ -160,7 +166,11 @@ Progresso de processo com várias etapas (migração, onboarding). Etapa conclu�
 
 ### Avatar
 
-Iniciais com cor **estável por nome** — a mesma pessoa tem sempre a mesma cor. `size`: `xs` (28px) · `sm` (36px) · `md` (40px) · `lg` (56px). `active` aplica anel de acento.
+Mostra o retrato da pessoa quando existe um, e cai nas iniciais quando não — é o caso dos pacientes gerados da agenda, que são muitos.
+
+Os retratos são **rostos sintéticos**, gerados por rede neural, e ficam no repositório. Num protótipo de saúde, colar o rosto de alguém identificável em "faltou · Bradesco Saúde" é dado clínico fabricado sobre uma pessoa real, e esta tela vai ser printada e compartilhada. Ficam no repositório, e não num CDN, para o portal do paciente não fazer requisição a terceiro — o mesmo motivo que levou a fonte a ser auto-hospedada.
+
+O fallback de iniciais tem cor **estável por nome** — a mesma pessoa tem sempre a mesma cor. `size`: `xs` (28px) · `sm` (36px) · `md` (40px) · `lg` (56px). `active` aplica anel de acento.
 
 Avatar é **conteúdo, não enfeite**: a agenda é multiprofissional e a pessoa precisa ser reconhecível de relance.
 

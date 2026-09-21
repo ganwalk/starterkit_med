@@ -126,3 +126,76 @@
     transition-timing-function: var(--ease-out);
   }
 }
+
+/* =========================================================================
+   MOVIMENTO
+
+   Animação aqui serve para dar continuidade entre estados — mostrar de onde
+   uma coisa veio — e nunca para chamar atenção. Curtas, com saída suave, e
+   sem deslocamento grande: o painel entra 12px, não a tela inteira.
+
+   Tudo é desligado sob prefers-reduced-motion. Movimento pode provocar
+   enjoo e desorientação em quem tem sensibilidade vestibular, e num sistema
+   usado 8 horas por dia isso não é detalhe.
+   ========================================================================= */
+
+@layer utilities {
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slide-in-right {
+    from { opacity: 0; transform: translateX(16px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes slide-in-left {
+    from { opacity: 0; transform: translateX(-16px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes scale-in {
+    from { opacity: 0; transform: scale(0.97) translateY(6px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  @keyframes rise-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-in {
+    animation: fade-in var(--duration-base) var(--ease-out) backwards;
+  }
+  .animate-slide-in-right {
+    animation: slide-in-right var(--duration-slow) var(--ease-out) backwards;
+  }
+  .animate-slide-in-left {
+    animation: slide-in-left var(--duration-slow) var(--ease-out) backwards;
+  }
+  .animate-scale-in {
+    animation: scale-in var(--duration-base) var(--ease-out) backwards;
+  }
+  /* Entrada padrão de conteúdo de tela.
+     fill-mode `backwards`, nunca `both`: `both` mantém o transform do último
+     quadro para sempre, e um transform vivo vira containing block, quebrando
+     todo `position: fixed` descendente. */
+  .animate-rise-in {
+    animation: rise-in var(--duration-slow) var(--ease-out) backwards;
+  }
+  .delay-1 { animation-delay: 40ms; }
+  .delay-2 { animation-delay: 80ms; }
+  .delay-3 { animation-delay: 120ms; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

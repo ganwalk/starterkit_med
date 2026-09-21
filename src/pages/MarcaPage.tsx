@@ -9,6 +9,7 @@ import {
   PageHeader,
   Select,
   Switch,
+  TabPanel,
   Tabs,
 } from '@/ds'
 import { useState } from 'react'
@@ -36,6 +37,7 @@ export function MarcaPage() {
       >
         <Tabs
           label="Seções do motor de marca"
+          idBase="marca"
           ativo={aba}
           onChange={setAba}
           itens={[
@@ -45,14 +47,15 @@ export function MarcaPage() {
         />
       </PageHeader>
 
-      {aba === 'implantacao' && <Implantacao />}
+      <TabPanel idBase="marca" id="implantacao" ativo={aba === 'implantacao'}>
+        <Implantacao />
+      </TabPanel>
 
-      {aba === 'marca' && (
-      <>
+      <TabPanel idBase="marca" id="marca" ativo={aba === 'marca'}>
       <div className="mb-5">
-        <Alert tone="info" icon={Alert01Icon} titulo="Pedido fora do parâmetro vira módulo pago, nunca fork">
-          Tudo nesta tela é parâmetro de uma base única e multi-tenant. Aceitar customização além
-          disso destrói a margem do modelo white label — é um risco registrado em §12.
+        <Alert tone="info" icon={Alert01Icon} titulo="O que dá para personalizar está nesta tela">
+          Logo, cor, domínio e textos mudam por clínica. Pedido além disso vira um módulo à parte,
+          orçado separadamente.
         </Alert>
       </div>
 
@@ -64,7 +67,7 @@ export function MarcaPage() {
               <Field label="Nome da clínica">
                 {(id) => <Input id={id} defaultValue={tenant.nome} key={tenant.id} />}
               </Field>
-              <Field label="Domínio do portal" hint="Domínio próprio recomendado para dado de saúde">
+              <Field label="Domínio do portal" hint="Recomendamos domínio próprio da clínica">
                 {(id) => <Input id={id} defaultValue={tenant.dominio} key={tenant.id} />}
               </Field>
               <Field label="Especialidade principal">
@@ -84,7 +87,7 @@ export function MarcaPage() {
           <Card>
             <CardHeader
               title="Cor da marca"
-              caption="A única variável de cor do sistema. Neutros e estado ativo não mudam"
+              caption="A cor de destaque da clínica. O restante da interface não muda"
             />
             <div className="flex flex-wrap gap-3">
               {tenants.map((item) => {
@@ -110,8 +113,7 @@ export function MarcaPage() {
               })}
             </div>
             <p className="text-faint mt-4 text-xs leading-relaxed">
-              Trocar aqui reescreve um atributo no documento. Nenhum componente é reconstruído —
-              é a mesma base de código servindo todas as clínicas.
+              A mudança vale na hora, em todas as telas e no portal do paciente.
             </p>
           </Card>
 
@@ -152,13 +154,11 @@ export function MarcaPage() {
             </div>
           </Card>
           <p className="text-faint mt-3 px-1 text-xs">
-            Prévia do portal com a marca aplicada. É onde a identidade da clínica aparece grande —
-            o diferencial contra a interface padrão dos concorrentes (§4).
+            É a tela que o paciente vê, e onde a marca da clínica aparece maior.
           </p>
         </div>
       </div>
-      </>
-      )}
+      </TabPanel>
     </PageBody>
   )
 }

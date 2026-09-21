@@ -118,7 +118,7 @@ export function IndicadoresPage() {
         <Card>
           <CardHeader
             title="Faltas por canal de confirmação"
-            caption="Quem confirma pelo WhatsApp falta menos — é a tese do produto, medida"
+            caption="Quem confirma pelo WhatsApp falta menos"
             action={{ icon: ArrowUpRight01Icon, label: 'Abrir relatório' }}
           />
           <div className="space-y-4">
@@ -200,9 +200,9 @@ export function IndicadoresPage() {
           </div>
         </div>
         <p className="text-faint mt-5 text-xs leading-relaxed">
-          Tempo de espera é o aspecto mais fraco e o único abaixo de 4 — é o que a fila da recepção
-          ataca. Comentários só entram em material de divulgação com autorização explícita do
-          paciente, separada da pesquisa (CFM 2.336/2023).
+          Tempo de espera é a nota mais baixa, e a única abaixo de 4. A tela da recepção mostra
+          quem está esperando há mais tempo. Para usar um comentário em divulgação, é preciso a
+          autorização que o paciente dá na própria pesquisa.
         </p>
       </Card>
 
@@ -210,7 +210,7 @@ export function IndicadoresPage() {
         <div className="p-6 pb-0">
           <CardHeader
             title="Reativação de pacientes"
-            caption="Quem não retorna há 6 meses ou mais. A campanha só alcança quem consentiu (§8)"
+            caption="Quem não retorna há 6 meses ou mais. A campanha só alcança quem aceitou receber contato"
           >
             <Button variant="accent" size="sm" icon={WhatsappIcon}>
               Criar campanha

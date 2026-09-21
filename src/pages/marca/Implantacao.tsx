@@ -46,7 +46,7 @@ const ETAPAS: Etapa[] = [
     itens: [
       { id: 'd1', titulo: 'Sistema de origem identificado', detalhe: "Doctor's Office (PES), licença instalada", feito: true },
       { id: 'd2', titulo: 'Volume de dados levantado', detalhe: '4.820 pacientes, 18.756 agendamentos', feito: true },
-      { id: 'd3', titulo: 'Contrato de operação assinado', detalhe: 'Antes de receber qualquer arquivo (§8)', feito: true, bloqueante: true },
+      { id: 'd3', titulo: 'Contrato de operação assinado', detalhe: 'Antes de receber qualquer arquivo', feito: true, bloqueante: true },
       { id: 'd4', titulo: 'Rotina da recepção mapeada', detalhe: 'Quem usa, quantos postos, horário de pico', feito: true },
     ],
   },
@@ -70,7 +70,7 @@ const ETAPAS: Etapa[] = [
       { id: 'e1', titulo: 'Profissionais e salas cadastrados', detalhe: '4 profissionais, 4 salas', feito: true },
       { id: 'e2', titulo: 'Horários e intervalos por profissional', detalhe: 'Antecedência mínima e máxima de agendamento', feito: true },
       { id: 'e3', titulo: 'Tipos de consulta e duração', detalhe: 'Retorno, primeira consulta, procedimento, encaixe', feito: true },
-      { id: 'e4', titulo: 'Perfis de acesso da equipe', detalhe: 'Recepção, profissional e gestão (§8)', feito: false, bloqueante: true },
+      { id: 'e4', titulo: 'Perfis de acesso da equipe', detalhe: 'Recepção, profissional e gestão', feito: false, bloqueante: true },
     ],
   },
   {
@@ -243,8 +243,8 @@ export function Implantacao() {
       <Card>
         <h3 className="text-h4 text-primary font-semibold">Prazo de go-live</h3>
         <p className="text-secondary mt-1 text-sm">
-          O compromisso de prazo por tamanho de base só é definido depois de medir o tempo real
-          nos pilotos (§11.2). Até lá, a implantação informa progresso, não data.
+          Ainda não prometemos data de go-live: o prazo por tamanho de base só sai depois de medir
+          o tempo real nas primeiras clínicas. Até lá, esta tela mostra progresso.
         </p>
         <div className="mt-4">
           <Button variant="subtle" size="sm">
