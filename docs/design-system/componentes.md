@@ -58,7 +58,7 @@ Barras finas, sem eixo nem grade. `tone`: `neutral` · `success` · `danger` · 
 
 Colunas declarativas com `render` por célula. `numerico: true` alinha à direita e aplica numeral tabular.
 
-O wrapper tem `overflow-x-auto` e a tabela um `min-width`: em tela estreita **a tabela rola sozinha** em vez de empurrar a página. Foi assim que o scroll horizontal global foi evitado.
+**Tabela no desktop, cartões no celular.** Abaixo de `sm` cada linha vira um cartão: a primeira coluna é o título, as demais viram pares de rótulo e valor. Cinco colunas não cabem em 390px, e rolar de lado larga metade da informação fora da tela.
 
 Aceita `vazio` para o estado sem resultado.
 
@@ -110,7 +110,9 @@ Usa `role="group"` com `aria-pressed`, **não** `role="tab"`: aba exige um paine
 
 ### Tabs
 
-Sublinhado, com contador opcional. Para **navegar entre conteúdos diferentes** dentro de uma tela. Rola no eixo X quando não cabe.
+Sublinhado, com contador opcional. Para **navegar entre conteúdos diferentes** dentro de uma tela. Quebra linha quando não cabe — nunca rola de lado.
+
+Se não couber nem quebrando, o componente está errado: um filtro da mesma lista é `Segmented`.
 
 Exige `idBase`, que amarra cada aba ao seu `<TabPanel>` via `aria-controls`. Setas esquerda e direita percorrem as abas.
 

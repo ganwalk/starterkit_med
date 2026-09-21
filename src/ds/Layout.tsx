@@ -50,7 +50,10 @@ export function Tabs({ itens, ativo, onChange, label, idBase }: TabsProps) {
       role="tablist"
       aria-label={label}
       onKeyDown={aoTeclar}
-      className="border-subtle flex gap-1 overflow-x-auto border-b"
+      /* flex-wrap, nunca overflow-x-auto: um filtro de três itens que não
+         cabe e vira barra de rolagem é falha de layout, não de espaço.
+         Quebrar linha mantém todas as opções visíveis. */
+      className="border-subtle flex flex-wrap gap-x-1 border-b"
     >
       {itens.map((item) => {
         const selecionado = item.id === ativo
@@ -64,7 +67,7 @@ export function Tabs({ itens, ativo, onChange, label, idBase }: TabsProps) {
             tabIndex={selecionado ? 0 : -1}
             onClick={() => onChange(item.id)}
             className={cn(
-              'relative flex min-h-[var(--target-comfortable)] shrink-0 items-center gap-2 px-3 text-sm font-medium transition-base',
+              'relative flex min-h-[var(--target-comfortable)] items-center gap-1.5 px-2.5 text-sm font-medium transition-base',
               selecionado ? 'text-primary' : 'text-muted hover:text-primary',
             )}
           >

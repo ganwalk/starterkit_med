@@ -20,6 +20,14 @@ export interface TableProps<T> {
   vazio?: ReactNode
 }
 
+/**
+ * Tabela no desktop, lista de cartões no celular.
+ *
+ * Cinco colunas não cabem em 390px, e a saída fácil — rolar de lado — larga
+ * metade da informação fora da tela e faz o usuário caçar a barra. Abaixo de
+ * `sm` cada linha vira um cartão: a primeira coluna é o título e as demais
+ * viram pares de rótulo e valor. Nada rola de lado em nenhuma largura.
+ */
 export function Table<T>({
   colunas,
   linhas,
@@ -30,11 +38,53 @@ export function Table<T>({
 }: TableProps<T>) {
   if (linhas.length === 0 && vazio) return <>{vazio}</>
 
+  const [principal, ...secundarias] = colunas
+
   return (
-    // overflow-x-auto no wrapper: em telas estreitas a tabela rola sozinha
-    // em vez de empurrar a página e criar scroll horizontal global.
-    <div className="w-full overflow-x-auto">
-      <table className="w-full min-w-[40rem] border-collapse text-left">
+    <>
+      {/* Celular: cartões empilhados */}
+      <ul className="divide-subtle divide-y sm:hidden" aria-label={label}>
+        {linhas.map((linha) => {
+          const Conteudo = (
+            <>
+              <div className="text-primary text-sm font-medium">{principal.render(linha)}</div>
+              <dl className="mt-2.5 space-y-1.5">
+                {secundarias.map((coluna) => (
+                  <div key={coluna.chave} className="flex items-baseline justify-between gap-3">
+                    <dt className="text-muted shrink-0 text-xs">{coluna.titulo}</dt>
+                    <dd
+                      className={cn(
+                        'text-primary min-w-0 text-right text-sm',
+                        coluna.numerico && 'tabular',
+                      )}
+                    >
+                      {coluna.render(linha)}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </>
+          )
+
+          return (
+            <li key={chaveDe(linha)}>
+              {onLinhaClick ? (
+                <button
+                  onClick={() => onLinhaClick(linha)}
+                  className="hover:bg-hover w-full px-4 py-3.5 text-left transition-base"
+                >
+                  {Conteudo}
+                </button>
+              ) : (
+                <div className="px-4 py-3.5">{Conteudo}</div>
+              )}
+            </li>
+          )
+        })}
+      </ul>
+
+      {/* Tablet e desktop: tabela de verdade */}
+      <table className="hidden w-full border-collapse text-left sm:table">
         <caption className="sr-only">{label}</caption>
         <thead>
           <tr className="border-subtle border-b">
@@ -78,6 +128,6 @@ export function Table<T>({
           ))}
         </tbody>
       </table>
-    </div>
+    </>
   )
 }

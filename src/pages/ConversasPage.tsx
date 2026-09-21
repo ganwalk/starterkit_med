@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Alert01Icon, SparklesIcon, WhatsappIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Alert, Avatar, Badge, Button, Card, Input, PageBody, PageHeader, Tabs } from '@/ds'
+import { Alert, Avatar, Badge, Button, Card, Input, PageBody, PageHeader, Segmented } from '@/ds'
 import { cn } from '@/lib/cn'
 import { CONVERSAS } from '@/data/plataforma'
 
@@ -30,26 +30,24 @@ export function ConversasPage() {
 
       <div className="grid gap-4 lg:grid-cols-[20rem_1fr]">
         <Card padding="none" elevation="sm" className="overflow-hidden">
-          <div className="px-3 pt-3">
-            <Tabs
+          {/* Segmented, não Tabs: o filtro troca a lente da mesma lista, não
+              o assunto. Também é o que cabe na coluna de 20rem — com abas o
+              terceiro item quebrava linha. */}
+          <div className="border-subtle border-b p-3">
+            <Segmented
               label="Filtrar conversas"
-              idBase="conversas"
-              ativo={aba}
+              size="sm"
+              value={aba}
               onChange={setAba}
-              itens={[
-                { id: 'humano', label: 'Aguardando', contador: CONVERSAS.filter((c) => c.aguardandoHumano).length },
-                { id: 'bot', label: 'Com o bot', contador: CONVERSAS.filter((c) => c.comBot).length },
-                { id: 'todas', label: 'Todas', contador: CONVERSAS.length },
+              options={[
+                { value: 'humano', label: `Aguardando ${CONVERSAS.filter((c) => c.aguardandoHumano).length}` },
+                { value: 'bot', label: `Bot ${CONVERSAS.filter((c) => c.comBot).length}` },
+                { value: 'todas', label: `Todas ${CONVERSAS.length}` },
               ]}
             />
           </div>
 
-          <ul
-            id={`conversas-painel-${aba}`}
-            role="tabpanel"
-            aria-labelledby={`conversas-aba-${aba}`}
-            className="max-h-[32rem] overflow-y-auto"
-          >
+          <ul className="max-h-[32rem] overflow-y-auto" aria-label="Conversas">
             {lista.map((conversa) => (
               <li key={conversa.id}>
                 <button

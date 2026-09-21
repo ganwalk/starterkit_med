@@ -16,6 +16,7 @@ const AUDIT = () => {
     headings: [],
     smallTargets: [],
     truncated: [],
+    rolagemLateral: [],
     zIndex: [],
     focusables: 0,
     noFocusStyle: [],
@@ -134,6 +135,19 @@ const AUDIT = () => {
       })
     }
 
+    // Container rolando no eixo X. Rolagem lateral esconde conteúdo atrás
+    // de uma barra que o usuário precisa caçar; a saída é o conteúdo caber,
+    // não o container rolar.
+    if (['auto', 'scroll'].includes(cs.overflowX) && el.scrollWidth - el.clientWidth > 2) {
+      out.rolagemLateral.push({
+        tag: el.tagName.toLowerCase(),
+        classe: (el.className || '').toString().slice(0, 70),
+        texto: el.textContent.trim().slice(0, 40),
+        excesso: el.scrollWidth - el.clientWidth,
+        largura: el.clientWidth,
+      })
+    }
+
     // z-index
     if (cs.zIndex !== 'auto' && parseInt(cs.zIndex) !== 0) {
       out.zIndex.push({
@@ -195,5 +209,53 @@ for (const theme of ['light', 'dark']) {
   }
 }
 
+/* ------------------------------------------------------------------------
+   Rolagem lateral em TODAS as rotas e larguras.
+
+   A primeira versão deste script só olhava scrollWidth do documento, e por
+   isso passou batido um container rolando de lado dentro da página — em
+   1440px, inclusive. Página sem rolagem lateral não basta: nenhum container
+   pode rolar de lado.
+   ------------------------------------------------------------------------ */
+
+const TODAS_ROTAS = [
+  '/agenda', '/recepcao', '/pacientes', '/conversas', '/funil', '/indicadores',
+  '/financeiro', '/migracao', '/marca', '/suporte', '/seguranca', '/portal',
+  '/design-system',
+]
+
+const rolagens = []
+for (const width of [390, 768, 1440]) {
+  const page = await browser.newPage({ viewport: { width, height: 900 } })
+  for (const route of TODAS_ROTAS) {
+    await page.goto(`${BASE}${route}`, { waitUntil: 'networkidle' })
+    await page.waitForTimeout(300)
+    const r = await page.evaluate(() => {
+      const de = document.documentElement
+      const containers = []
+      for (const el of document.querySelectorAll('*')) {
+        const cs = getComputedStyle(el)
+        if (!['auto', 'scroll'].includes(cs.overflowX)) continue
+        const excesso = el.scrollWidth - el.clientWidth
+        if (excesso > 2) {
+          containers.push({
+            classe: (el.className || '').toString().slice(0, 60),
+            excesso,
+          })
+        }
+      }
+      return { pagina: de.scrollWidth - de.clientWidth, containers }
+    })
+    if (r.pagina > 1) rolagens.push(`${width}px ${route}: PÁGINA rola ${r.pagina}px`)
+    for (const c of r.containers) {
+      rolagens.push(`${width}px ${route}: container rola ${c.excesso}px — ${c.classe}`)
+    }
+  }
+  await page.close()
+}
+
 await browser.close()
+
 console.log(JSON.stringify(results, null, 1))
+console.error('\n=== ROLAGEM LATERAL ===')
+console.error(rolagens.length ? rolagens.join('\n') : 'nenhuma, em 13 rotas x 3 larguras')
