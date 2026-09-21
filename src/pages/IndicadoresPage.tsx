@@ -163,6 +163,49 @@ export function IndicadoresPage() {
         </Card>
       </div>
 
+      <Card className="mt-5">
+        <CardHeader
+          title="Satisfação pós-consulta"
+          caption="Respostas do portal. Nota geral de 1 a 5, coletada após o atendimento"
+          action={{ icon: ArrowUpRight01Icon, label: 'Abrir relatório' }}
+        />
+        <div className="grid gap-6 sm:grid-cols-[auto_1fr]">
+          <div className="text-center sm:text-left">
+            <p className="numeral text-primary text-display">4,6</p>
+            <p className="text-muted text-sm">de 5 · 312 respostas</p>
+            <p className="text-faint text-xs mt-1">Taxa de resposta: 41%</p>
+          </div>
+          <div className="space-y-3">
+            {[
+              { aspecto: 'Consulta com o profissional', nota: 4.8 },
+              { aspecto: 'Atendimento da recepção', nota: 4.7 },
+              { aspecto: 'Facilidade para agendar', nota: 4.5 },
+              { aspecto: 'Tempo de espera', nota: 3.9 },
+            ].map((linha) => (
+              <div key={linha.aspecto}>
+                <div className="mb-1.5 flex items-center justify-between gap-3">
+                  <span className="text-secondary text-sm">{linha.aspecto}</span>
+                  <span className="text-primary text-sm font-semibold tabular">
+                    {linha.nota.toFixed(1).replace('.', ',')}
+                  </span>
+                </div>
+                <Progress
+                  valor={linha.nota}
+                  max={5}
+                  label={`Satisfação: ${linha.aspecto}`}
+                  tone={linha.nota < 4 ? 'warning' : 'success'}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+        <p className="text-faint mt-5 text-xs leading-relaxed">
+          Tempo de espera é o aspecto mais fraco e o único abaixo de 4 — é o que a fila da recepção
+          ataca. Comentários só entram em material de divulgação com autorização explícita do
+          paciente, separada da pesquisa (CFM 2.336/2023).
+        </p>
+      </Card>
+
       <Card className="mt-5" padding="none">
         <div className="p-6 pb-0">
           <CardHeader

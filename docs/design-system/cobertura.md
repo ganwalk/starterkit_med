@@ -65,10 +65,19 @@ Seguem a decisão do documento, não um esquecimento:
 - **Painel de chamada em TV, financeiro completo, assinatura digital** — §4 "Adiar" ou "Integrar", fase 3.
 - **SMS e e-mail, vídeos de ajuda** — fase 2; são canal e conteúdo, não decisão de interface.
 
-## O que ainda falta para o protótipo ficar completo
+## Fluxos completos
 
-| Lacuna | Onde entra |
+Além das telas, três fluxos ponta a ponta:
+
+| Fluxo | Onde | O que faz |
+| --- | --- | --- |
+| **Novo agendamento** | `/agenda` | Busca ou cadastra paciente, escolhe profissional e tipo, oferece **horários livres calculados da agenda real**, pede sinal por Pix e confirmação por WhatsApp. O agendamento criado entra na grade |
+| **Implantação de clínica** | `/marca` → aba Implantação | As cinco etapas do playbook (§13.2) com itens bloqueantes de go-live explicitados |
+| **Pesquisa de satisfação** | `/portal` → agregado em `/indicadores` | Nota geral, notas por aspecto e comentário, com autorização de publicação **separada e desligada por padrão** |
+
+## O que ainda falta
+
+| Lacuna | Observação |
 | --- | --- |
-| Fluxo de novo agendamento ponta a ponta | `/agenda` |
-| Onboarding de clínica nova, guiado | `/marca` |
-| Pesquisa de satisfação pós-consulta | `/portal` |
+| Auditoria de teclado e leitor de tela | Registrado em `acessibilidade.md` |
+| Visão de semana com múltiplos profissionais | Decisão consciente: ver `padroes.md` |

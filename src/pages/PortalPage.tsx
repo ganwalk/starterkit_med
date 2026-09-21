@@ -10,6 +10,7 @@ import {
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Avatar, Badge, Button, Card, Field, Input, Select, Sheet, StatusPill, Switch } from '@/ds'
 import { useTenant } from '@/tenant/TenantProvider'
+import { PesquisaSatisfacao } from './portal/PesquisaSatisfacao'
 
 const HISTORICO = [
   { data: '12 de agosto de 2026', profissional: 'Dra. Helena Marques', tipo: 'Retorno' },
@@ -149,6 +150,8 @@ export function PortalPage() {
             </ul>
           </Card>
         </div>
+
+        <PesquisaSatisfacao />
 
         <Card>
           <div className="flex flex-wrap items-center justify-between gap-4">

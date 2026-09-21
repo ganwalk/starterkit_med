@@ -1,8 +1,21 @@
-import { Alert, Button, Card, CardHeader, Field, Input, PageBody, PageHeader, Select, Switch } from '@/ds'
+import {
+  Alert,
+  Button,
+  Card,
+  CardHeader,
+  Field,
+  Input,
+  PageBody,
+  PageHeader,
+  Select,
+  Switch,
+  Tabs,
+} from '@/ds'
 import { useState } from 'react'
 import { Alert01Icon } from '@hugeicons/core-free-icons'
 import { useTenant } from '@/tenant/TenantProvider'
 import { cn } from '@/lib/cn'
+import { Implantacao } from './marca/Implantacao'
 
 /**
  * Motor de marca — §9 e §13. A customização é parâmetro, nunca fork:
@@ -12,15 +25,30 @@ export function MarcaPage() {
   const { tenant, tenants, setTenantId } = useTenant()
   const [portalAtivo, setPortalAtivo] = useState(true)
   const [botAtivo, setBotAtivo] = useState(true)
+  const [aba, setAba] = useState('marca')
 
   return (
     <PageBody>
       <PageHeader
         titulo="Motor de marca"
         resumo="Logo, cor, domínio e textos por clínica — sem uma linha de código por cliente"
-        acoes={<Button variant="accent">Salvar e publicar</Button>}
-      />
+        acoes={aba === 'marca' ? <Button variant="accent">Salvar e publicar</Button> : undefined}
+      >
+        <Tabs
+          label="Seções do motor de marca"
+          ativo={aba}
+          onChange={setAba}
+          itens={[
+            { id: 'marca', label: 'Marca' },
+            { id: 'implantacao', label: 'Implantação' },
+          ]}
+        />
+      </PageHeader>
 
+      {aba === 'implantacao' && <Implantacao />}
+
+      {aba === 'marca' && (
+      <>
       <div className="mb-5">
         <Alert tone="info" icon={Alert01Icon} titulo="Pedido fora do parâmetro vira módulo pago, nunca fork">
           Tudo nesta tela é parâmetro de uma base única e multi-tenant. Aceitar customização além
@@ -129,6 +157,8 @@ export function MarcaPage() {
           </p>
         </div>
       </div>
+      </>
+      )}
     </PageBody>
   )
 }

@@ -40,6 +40,7 @@ import {
 import type { Agendamento } from '@/data/agenda'
 import { VisaoSemana } from './agenda/VisaoSemana'
 import { VisaoMes } from './agenda/VisaoMes'
+import { NovoAgendamento } from './agenda/NovoAgendamento'
 
 const TOTAL_SLOTS = ((HORA_FIM - HORA_INICIO) * 60) / SLOT
 // 26px: altura mínima para um encaixe de 15 min caber uma linha de 11px
@@ -137,9 +138,16 @@ export function AgendaPage() {
   const [profSemana, setProfSemana] = useState(PROFISSIONAIS[0].id)
   const [selecionado, setSelecionado] = useState<Agendamento | null>(null)
   const [busca, setBusca] = useState('')
+  const [criando, setCriando] = useState(false)
+  // Agendamentos criados durante a sessão. Ficam em memória porque o
+  // protótipo não tem backend, mas entram na grade como qualquer outro.
+  const [criados, setCriados] = useState<Agendamento[]>([])
 
   const iso = isoDe(data)
-  const doDia = useMemo(() => agendamentosDoDia(iso), [iso])
+  const doDia = useMemo(
+    () => [...agendamentosDoDia(iso), ...criados.filter((a) => a.data === iso)],
+    [iso, criados],
+  )
 
   const filtrados = useMemo(() => {
     const termo = busca.trim().toLowerCase()
@@ -230,7 +238,12 @@ export function AgendaPage() {
                 { value: 'mes', label: 'Mês' },
               ]}
             />
-            <Button variant="accent" size="sm" icon={Add01Icon}>
+            <Button
+              variant="accent"
+              size="sm"
+              icon={Add01Icon}
+              onClick={() => setCriando(true)}
+            >
               Novo agendamento
             </Button>
           </>
@@ -370,6 +383,17 @@ export function AgendaPage() {
           Clique em um agendamento para abrir o detalhe com histórico de alterações.
         </p>
       )}
+
+      <NovoAgendamento
+        open={criando}
+        onClose={() => setCriando(false)}
+        iso={iso}
+        onCriar={(a) => {
+          setCriados((atuais) => [...atuais, a])
+          setVisao('dia')
+          setSelecionado(a)
+        }}
+      />
 
       <Sheet
         open={selecionado !== null}
