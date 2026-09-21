@@ -33,3 +33,6 @@ export type { AlertProps, AlertTone, EmptyStateProps, ProgressProps, Step } from
 
 export { Tabs, TabPanel, painelId, Toolbar, Accordion, DataList, Timeline } from './Layout'
 export type { TabsProps, TabItem, TimelineEvent } from './Layout'
+
+export { Marca } from './Marca'
+export type { MarcaProps } from './Marca'

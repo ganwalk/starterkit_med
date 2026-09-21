@@ -41,11 +41,27 @@ Toda tela do app segue isso. O `PageHeader` e o `PageBody` garantem que largura 
 
 ---
 
+## Nada rola de lado. Nunca.
+
+Não é só a página: **nenhum container** pode rolar no eixo X, em nenhuma largura.
+
+Rolagem lateral esconde conteúdo atrás de uma barra que o usuário precisa descobrir que existe, e numa tela de trabalho isso significa informação que ninguém vê. Quando algo não cabe, a saída é **mudar a forma**, não rolar:
+
+| Não cabe | Saída errada | Saída certa |
+| --- | --- | --- |
+| Tabela de 5 colunas em 390px | Rolar de lado | Cada linha vira um cartão empilhado |
+| Quadro do funil com 5 etapas | Rolar de lado | Etapas empilham verticalmente |
+| Filtro de 3 abas numa coluna de 20rem | Rolar de lado, ou quebrar linha | `Segmented`, que é mais compacto — e é o componente certo para trocar a lente da mesma lista |
+
+A auditoria (`scripts/audit-ux.mjs`) verifica isso em 13 rotas × 3 larguras e falha se qualquer container rolar. A primeira versão do script só olhava a página, e por isso deixou passar um filtro rolando de lado **em 1440px**.
+
+Onde a rolagem vertical é legítima (lista longa, grade da agenda), a barra é fina e sem trilho — precisa parecer intencional, não componente quebrado.
+
 ## Listas e tabelas
 
 - Ordene pelo que **importa para a ação**, não pelo que é fácil. A fila da recepção ordena por tempo de espera, não por horário marcado. A fila de suporte ordena por risco de SLA, não por chegada.
 - Coluna numérica sempre `numerico: true` (alinhada à direita, numeral tabular).
-- A tabela rola dentro do próprio container em tela estreita. A página nunca rola no eixo X.
+- `Table` é tabela no desktop e **lista de cartões abaixo de `sm`** — a primeira coluna vira o título do cartão, as demais viram pares de rótulo e valor.
 - Linha clicável abre `Sheet` lateral. Nunca navegue para outra página por causa de um detalhe.
 - Toda lista tem `EmptyState` com **próximo passo**, não só "nada aqui".
 

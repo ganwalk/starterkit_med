@@ -1,5 +1,4 @@
-import pkg from '/opt/node22/lib/node_modules/playwright/index.js'
-const { chromium } = pkg
+import { chromium } from 'playwright'
 
 const ROUTES = ['/design-system', '/agenda', '/portal']
 const BASE = 'http://localhost:5173/starterkit_med/#'
@@ -16,6 +15,7 @@ const AUDIT = () => {
     headings: [],
     smallTargets: [],
     truncated: [],
+    rolagemLateral: [],
     zIndex: [],
     focusables: 0,
     noFocusStyle: [],
@@ -39,11 +39,34 @@ const AUDIT = () => {
     const p = m[1].split(',').map((x) => parseFloat(x))
     return { rgb: [p[0], p[1], p[2]], a: p[3] === undefined ? 1 : p[3] }
   }
+  // Primeira parada de cor de um gradiente. Sem isto, o fundo de qualquer
+  // herói com `background: linear-gradient(...)` é invisível para a auditoria:
+  // backgroundColor vem transparente, a subida para no <html> e o texto branco
+  // do portal era medido contra branco — 1.06:1 de falso positivo, que é
+  // justamente o tipo de ruído que faz uma falha real passar despercebida.
+  const gradienteDe = (cs) => {
+    const img = cs.backgroundImage
+    if (!img || img === 'none' || !img.includes('gradient')) return null
+    const m = img.match(/rgba?\([^)]+\)/g)
+    if (!m) return null
+    const cores = m.map(parseRGB).filter((c) => c && c.a > 0.5)
+    if (!cores.length) return null
+    // Média das paradas: aproximação honesta para um fundo que varia
+    const soma = cores.reduce(
+      (acc, c) => [acc[0] + c.rgb[0], acc[1] + c.rgb[1], acc[2] + c.rgb[2]],
+      [0, 0, 0],
+    )
+    return soma.map((v) => Math.round(v / cores.length))
+  }
+
   const bgOf = (el) => {
     let node = el
     while (node && node !== document.documentElement) {
-      const c = parseRGB(getComputedStyle(node).backgroundColor)
+      const cs = getComputedStyle(node)
+      const c = parseRGB(cs.backgroundColor)
       if (c && c.a > 0.5) return c.rgb
+      const g = gradienteDe(cs)
+      if (g) return g
       node = node.parentElement
     }
     return [255, 255, 255]
@@ -134,6 +157,19 @@ const AUDIT = () => {
       })
     }
 
+    // Container rolando no eixo X. Rolagem lateral esconde conteúdo atrás
+    // de uma barra que o usuário precisa caçar; a saída é o conteúdo caber,
+    // não o container rolar.
+    if (['auto', 'scroll'].includes(cs.overflowX) && el.scrollWidth - el.clientWidth > 2) {
+      out.rolagemLateral.push({
+        tag: el.tagName.toLowerCase(),
+        classe: (el.className || '').toString().slice(0, 70),
+        texto: el.textContent.trim().slice(0, 40),
+        excesso: el.scrollWidth - el.clientWidth,
+        largura: el.clientWidth,
+      })
+    }
+
     // z-index
     if (cs.zIndex !== 'auto' && parseInt(cs.zIndex) !== 0) {
       out.zIndex.push({
@@ -195,5 +231,83 @@ for (const theme of ['light', 'dark']) {
   }
 }
 
+/* ------------------------------------------------------------------------
+   Rolagem lateral em TODAS as rotas e larguras.
+
+   A primeira versão deste script só olhava scrollWidth do documento, e por
+   isso passou batido um container rolando de lado dentro da página — em
+   1440px, inclusive. Página sem rolagem lateral não basta: nenhum container
+   pode rolar de lado.
+   ------------------------------------------------------------------------ */
+
+const TODAS_ROTAS = [
+  '/agenda', '/recepcao', '/pacientes', '/conversas', '/funil', '/indicadores',
+  '/financeiro', '/migracao', '/marca', '/suporte', '/seguranca', '/portal',
+  '/design-system',
+]
+
+const rolagens = []
+for (const width of [390, 768, 1440]) {
+  const page = await browser.newPage({ viewport: { width, height: 900 } })
+  for (const route of TODAS_ROTAS) {
+    await page.goto(`${BASE}${route}`, { waitUntil: 'networkidle' })
+    await page.waitForTimeout(300)
+    const r = await page.evaluate(() => {
+      const de = document.documentElement
+      const rolando = []
+      const inuteis = []
+      for (const el of document.querySelectorAll('*')) {
+        if (el === document.body || el === de) continue
+        const cs = getComputedStyle(el)
+        const podeX = ['auto', 'scroll'].includes(cs.overflowX)
+        const podeY = ['auto', 'scroll'].includes(cs.overflowY)
+        const exX = el.scrollWidth - el.clientWidth
+        const exY = el.scrollHeight - el.clientHeight
+        const classe = (el.className || '').toString().slice(0, 60)
+
+        // Rolagem lateral de verdade: sempre falha.
+        if (podeX && exX > 2) rolando.push({ eixo: 'X', excesso: exX, classe })
+
+        // Barra REALMENTE desenhada, ocupando espaço de layout, sem conteúdo
+        // que a justifique. Declarar overflow num eixo faz o outro virar
+        // `auto` pela especificação do CSS, então um container que pede
+        // rolagem sem precisar ganha a barra do eixo errado de brinde —
+        // foi assim que um filtro de três abas apareceu com barra vertical.
+        // Só faz sentido em container de rolagem de verdade: em elemento
+        // inline o clientWidth é 0 e a conta abaixo não significa nada.
+        if (!podeX && !podeY) continue
+        if (el.clientWidth === 0 || el.clientHeight === 0) continue
+
+        const bordaV = parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth)
+        const bordaH = parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth)
+        const barraV = el.offsetWidth - el.clientWidth - bordaV
+        const barraH = el.offsetHeight - el.clientHeight - bordaH
+        if (barraV > 2 && exY <= 2) {
+          inuteis.push({ classe, motivo: 'barra vertical sem conteúdo que a justifique' })
+        }
+        if (barraH > 2 && exX <= 2) {
+          inuteis.push({ classe, motivo: 'barra horizontal sem conteúdo que a justifique' })
+        }
+      }
+      return { pagina: de.scrollWidth - de.clientWidth, rolando, inuteis }
+    })
+    if (r.pagina > 1) rolagens.push(`${width}px ${route}: PÁGINA rola ${r.pagina}px`)
+    for (const c of r.rolando) {
+      rolagens.push(`${width}px ${route}: rola no eixo ${c.eixo} (${c.excesso}px) — ${c.classe}`)
+    }
+    for (const c of r.inuteis) {
+      rolagens.push(`${width}px ${route}: rolagem declarada sem necessidade (${c.motivo}) — ${c.classe}`)
+    }
+  }
+  await page.close()
+}
+
 await browser.close()
+
 console.log(JSON.stringify(results, null, 1))
+console.error('\n=== ROLAGEM ===')
+console.error(
+  rolagens.length
+    ? rolagens.join('\n')
+    : 'nenhuma rolagem lateral nem declarada sem necessidade, em 13 rotas x 3 larguras',
+)

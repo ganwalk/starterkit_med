@@ -472,7 +472,7 @@ export function AgendaPage() {
                 icon={WhatsappIcon}
                 size={18}
                 strokeWidth={1.5}
-                className="text-accent mt-0.5 shrink-0"
+                className="text-accent-text mt-0.5 shrink-0"
               />
               <p className="text-secondary text-xs leading-relaxed">
                 A confirmação vai pelo WhatsApp oficial. Quando o paciente responde, o status

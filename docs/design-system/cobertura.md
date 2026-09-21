@@ -36,6 +36,24 @@ Mapa de cada iniciativa do documento de escopo para a tela que a implementa. Ser
 
 **Cobertura: 11 de 11 itens do MVP têm tela funcional.**
 
+### O que o motor de marca faz (§9, §13)
+
+A tela `/marca` não descreve a customização: ela executa. O que se muda ali vale no produto inteiro, na hora.
+
+| Parâmetro | Efeito |
+| --- | --- |
+| Logo | Sobe do arquivo da clínica e aparece no menu, no portal e na prévia — o mesmo componente `Marca` nos três |
+| Cor | Deriva a rampa inteira de um hexadecimal e reescreve os tokens no `<html>`; botão, aba ativa e bloco de data do portal trocam juntos |
+| Cor a partir do logo | Lê a cor dominante do arquivo enviado e oferece aplicá-la — porque o hexadecimal exato da marca é justamente o que a recepção não tem |
+| Contraste | Mede a cor escolhida contra fundo claro e, quando reprova em 4,5:1, propõe um tom ajustado que mantém a identidade |
+| Domínio | Endereço próprio com estado de DNS e certificado |
+| Tom das mensagens | Próximo, neutro ou formal, com prévia da confirmação de 48h |
+| O que o paciente vê | Portal, agendamento online e assistente 24h, cada um com a consequência escrita |
+
+O ponto de tudo isto é §9: **customização vira parâmetro, nunca fork**. Nenhuma dessas chaves cria caminho de código por clínica.
+
+A validação de contraste é onde o motor de marca encosta na acessibilidade. Sem ela, uma clínica escolhe um amarelo bonito, publica, e deixa todo rótulo de acento ilegível — e não tem como saber disso sozinha.
+
 ## Pilares do produto (§11)
 
 | Pilar | Onde aparece |

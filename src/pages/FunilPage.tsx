@@ -84,9 +84,11 @@ export function FunilPage() {
         </div>
       )}
 
-      {/* Quadro por etapa. Rola no eixo X em tela estreita, sem empurrar a página. */}
-      <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
-        <div className="flex min-w-[56rem] gap-4">
+      {/* Quadro de colunas no desktop; etapas empilhadas no celular.
+          Cinco colunas não cabem em 390px, e rolar de lado esconde metade
+          do funil — justamente a visão que a tela existe para dar. */}
+      <div>
+        <div className="flex flex-col gap-6 lg:flex-row lg:gap-4">
           {ETAPAS.map((etapa) => {
             const doEtapa = LEADS.filter((l) => l.etapa === etapa.id)
             return (
@@ -101,7 +103,7 @@ export function FunilPage() {
                   <p className="text-faint mt-0.5 text-2xs">{etapa.descricao}</p>
                 </header>
 
-                <div className="flex flex-col gap-2">
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-1">
                   {doEtapa.map((lead) => {
                     const atrasado = lead.horasParado > SLA_HORAS && etapa.id !== 'compareceu' && etapa.id !== 'perdido'
                     return (

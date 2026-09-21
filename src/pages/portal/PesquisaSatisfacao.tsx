@@ -72,7 +72,7 @@ export function PesquisaSatisfacao() {
                 'flex min-h-[var(--target-comfortable)] flex-col items-center justify-center rounded-md border px-3 py-1.5 transition-base',
                 nota === n
                   ? 'border-transparent bg-active text-on-active'
-                  : 'border-subtle text-primary hover:border-accent hover:text-accent',
+                  : 'border-subtle text-primary hover:border-accent hover:text-accent-text',
               )}
             >
               <span className="text-sm font-bold tabular">{n}</span>

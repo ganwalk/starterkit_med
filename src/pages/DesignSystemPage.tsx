@@ -13,6 +13,7 @@ import {
   Alert,
   Avatar,
   AvatarGroup,
+  Marca,
   Badge,
   Button,
   Card,
@@ -422,6 +423,35 @@ export function DesignSystemPage() {
                 ]}
                 size="md"
               />
+            </div>
+
+            <div className="border-subtle mt-5 border-t pt-5">
+              <p className="text-secondary mb-3 text-sm font-medium">
+                Marca — o selo da clínica
+              </p>
+              <div className="flex flex-wrap items-center gap-5">
+                <div className="flex items-center gap-3">
+                  <Marca size="sm" />
+                  <Marca size="md" />
+                  <Marca size="lg" />
+                </div>
+                {/* `sobreCor` só faz sentido dentro da zona de marca, por isso
+                    a amostra traz o fundo junto: fora dele o selo some. */}
+                <div
+                  className="flex items-center gap-2.5 rounded-lg px-4 py-3"
+                  style={{
+                    background:
+                      'linear-gradient(140deg, var(--accent) 0%, var(--accent-hover) 100%)',
+                  }}
+                >
+                  <Marca tone="sobreCor" />
+                  <span className="text-2xs font-semibold text-white">sobreCor</span>
+                </div>
+              </div>
+              <p className="text-faint mt-3 text-xs leading-relaxed">
+                Mostra o logo enviado no motor de marca; sem logo, o monograma. Envie um arquivo em
+                Motor de marca e este selo troca aqui junto.
+              </p>
             </div>
           </Card>
 

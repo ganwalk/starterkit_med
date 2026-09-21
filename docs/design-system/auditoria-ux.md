@@ -57,11 +57,13 @@ Cinco valores espalhados sem nome (0.2, 0.4, 0.45, 0.55, 0.7). Cada um virou tok
 
 O `truncate` no exemplo da escala tipográfica cortava o numeral de 56px (69px de conteúdo em caixa de 62px), porque `truncate` aplica `overflow: hidden` e o `line-height` apertado não comporta ascendentes e descendentes. Removido.
 
-## Falso positivo registrado
+## Falso positivo que virou correção do medidor
 
-`"Olá, Ana Beatriz"` acusa contraste de **1.06:1**. É erro do medidor, não da tela: o texto branco está sobre o gradiente de marca, aplicado via `background-image`, e o script só lê `background-color`, então ele sobe na árvore até achar o branco da página. Verificado visualmente: o contraste real é adequado.
+`"Olá, Ana Beatriz"` acusava contraste de **1.06:1**. Era erro do medidor, não da tela: o texto branco está sobre o gradiente de marca, aplicado via `background-image`, e o script só lia `background-color`, então subia na árvore até achar o branco da página.
 
-Fica registrado para a próxima rodada não "corrigir" o que está certo.
+Ficou registrado como falso positivo por uma rodada. Foi a decisão errada: **um falso positivo tolerado é onde uma falha real se esconde**. Quando o portal ganhou o selo da marca, o monograma branco sobre o mesmo gradiente entrou na lista com o mesmo 1.06, e já eram dois itens que a gente aprendeu a ignorar em bloco.
+
+O script agora lê as paradas de cor de um gradiente e usa a média delas como fundo. Os dois itens sumiram da lista porque passaram a ser medidos, não porque foram anistiados.
 
 ## Exceção aceita
 
@@ -72,6 +74,51 @@ O cartão de agendamento de 15 minutos tem 26px de altura, abaixo do `--target-m
 **Scroll horizontal em 390px e 768px, em todas as páginas.** O conteúdo mede 594px numa viewport de 390px. A causa é o cabeçalho, que não encolhe: marca, navegação e seletor de clínica ficam lado a lado sem quebra.
 
 Isso é falha funcional — o escopo pede uso no celular explicitamente (§11.1, item 1). Será corrigido na reconstrução do shell, que precisa virar navegação de aplicação de verdade (lateral no desktop, gaveta no celular).
+
+## Rodada 4 — portal e motor de marca
+
+### 1. Três interruptores na mesma linha, cada rótulo sob o trilho do seguinte
+
+`Switch` era `inline-flex`. Elemento inline ignora margem vertical, então o `space-y-4` que os separava não fazia nada: os três nasciam lado a lado, com o rótulo de um encostando no controle do outro. Medido no DOM — os três com o mesmo `top: 1686`.
+
+Corrigido no componente, não na tela: `flex w-fit`. Era falha de biblioteca, e a mesma armadilha estava montada em qualquer pilha de interruptores — o passo 3 do novo agendamento incluído.
+
+### 2. Acento como texto reprovava no tema escuro
+
+`--accent` servia para fundo de botão **e** para texto. Como texto sobre o próprio tom suave, o azul da marca dava **3,15:1** — o bloco de data do portal ("Quinta", "Setembro") e o link "Como chegar" reprovavam no escuro.
+
+Separado em `--accent-text`, que obedece à mesma regra dos neutros: no escuro, texto sobe na escala. Como fundo de botão o acento continua saturado, porque lá quem carrega o contraste é o texto branco.
+
+### 3. "Como chegar" com 16px de altura
+
+Alvo de 91×16px dentro de uma linha de texto. Ganhou `min-h-[var(--target-min)]`. O hover deixou de escurecer o acento e passou a sublinhar: no tema escuro, escurecer o acento é perder justamente o contraste que ele tem.
+
+### 4. Nome do documento cortado para "Receit…" em 390px
+
+O selo de validade foi escondido no celular com `hidden` passado como `className` do `Badge`. Não funcionou: o `cn` concatena sem resolver conflito do Tailwind, então `hidden` e o `inline-flex` do próprio componente ficam os dois na lista e quem decide é a ordem da folha. O selo ficava, e o nome do documento cedia espaço.
+
+Escondido pelo invólucro. Virou regra em `componentes.md`.
+
+### 5. Área vazia grande no lugar dos documentos
+
+O portal abria um cartão de ~300px para dizer que não havia documento nenhum. Um portal cujo paciente nunca recebeu receita é uma demonstração mais fraca do que um que recebeu — e a razão nº 1 de ligação para a recepção é pedir a receita de novo. O estado vazio continua documentado e demonstrado em `/design-system`, onde é o lugar dele.
+
+### 6. O selo da clínica era um quadrado vazio em três lugares
+
+Sobre o gradiente do portal, translúcido, parecia imagem que não carregou. Virou o componente `Marca`, que mostra o logo enviado ou o monograma, nos três lugares de uma vez.
+
+### Auditoria de acessibilidade no mesmo passo
+
+O medidor acusou "sem nome acessível" no `<input type="color">` que o selo da marca aciona. Esse controle é `aria-hidden` com `tabindex="-1"` de propósito — cobrar nome dele é cobrar o oposto do que o atributo pede. O script passou a pular o que está fora da árvore de acessibilidade.
+
+### Resultado
+
+| | antes | depois |
+| --- | --- | --- |
+| Contraste reprovando (claro + escuro) | 5 | **0** |
+| Alvos abaixo de 32px | 2 | **1** (a exceção documentada) |
+| Problemas de acessibilidade | 1 | **0** |
+| Rolagem lateral (13 rotas × 3 larguras) | 0 | **0** |
 
 ## Como repetir a auditoria
 

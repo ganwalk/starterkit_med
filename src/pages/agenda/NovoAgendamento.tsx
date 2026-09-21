@@ -321,7 +321,7 @@ export function NovoAgendamento({ open, onClose, iso, onCriar }: NovoAgendamento
                         'min-h-[var(--target-min)] rounded-pill border px-3 text-sm font-medium tabular transition-base',
                         horario === h
                           ? 'border-transparent bg-active text-on-active'
-                          : 'border-subtle text-primary hover:border-accent hover:text-accent',
+                          : 'border-subtle text-primary hover:border-accent hover:text-accent-text',
                       )}
                     >
                       {h}

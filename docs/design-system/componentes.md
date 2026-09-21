@@ -58,7 +58,7 @@ Barras finas, sem eixo nem grade. `tone`: `neutral` · `success` · `danger` · 
 
 Colunas declarativas com `render` por célula. `numerico: true` alinha à direita e aplica numeral tabular.
 
-O wrapper tem `overflow-x-auto` e a tabela um `min-width`: em tela estreita **a tabela rola sozinha** em vez de empurrar a página. Foi assim que o scroll horizontal global foi evitado.
+**Tabela no desktop, cartões no celular.** Abaixo de `sm` cada linha vira um cartão: a primeira coluna é o título, as demais viram pares de rótulo e valor. Cinco colunas não cabem em 390px, e rolar de lado larga metade da informação fora da tela.
 
 Aceita `vazio` para o estado sem resultado.
 
@@ -110,7 +110,9 @@ Usa `role="group"` com `aria-pressed`, **não** `role="tab"`: aba exige um paine
 
 ### Tabs
 
-Sublinhado, com contador opcional. Para **navegar entre conteúdos diferentes** dentro de uma tela. Rola no eixo X quando não cabe.
+Sublinhado, com contador opcional. Para **navegar entre conteúdos diferentes** dentro de uma tela. Quebra linha quando não cabe — nunca rola de lado.
+
+Se não couber nem quebrando, o componente está errado: um filtro da mesma lista é `Segmented`.
 
 Exige `idBase`, que amarra cada aba ao seu `<TabPanel>` via `aria-controls`. Setas esquerda e direita percorrem as abas.
 
@@ -143,6 +145,10 @@ Envolve qualquer controle com `label`, `hint` e `error`, gerando o `id` e amarra
 `role="switch"` com `aria-checked`. Para ligar/desligar com **efeito imediato**. Se a mudança só vale depois de salvar, use checkbox.
 
 A área de toque tem 32px mesmo com o trilho visual de 24px.
+
+É `flex w-fit`, **nunca `inline-flex`**: elemento inline ignora margem vertical, então três `Switch` dentro de um `space-y-4` ficavam lado a lado na mesma linha, cada rótulo por baixo do trilho do seguinte. `w-fit` mantém o alvo do tamanho do conteúdo — em bloco de largura total, metade do clique cai num vazio à direita do rótulo.
+
+Para uma lista de ajustes, monte a linha no chamador (título, descrição e `Switch` com `hideLabel`) em vez de empilhar rótulos visíveis: o que liga ou desliga merece uma frase dizendo a consequência.
 
 ---
 
@@ -178,6 +184,16 @@ Avatar é **conteúdo, não enfeite**: a agenda é multiprofissional e a pessoa 
 
 Empilha com sobreposição e resume o excedente em `+N`.
 
+### Marca
+
+O selo da clínica: o logo enviado no motor de marca, ou o monograma quando não há logo.
+
+Existe como componente porque o mesmo símbolo aparece no menu, no portal e na prévia do motor de marca. Antes eram três quadrados coloridos soltos pelo código, e o do portal — translúcido sobre o gradiente — parecia imagem que não carregou.
+
+`tone`: `solido` sobre fundo claro · `sobreCor` dentro da zona de marca. `size`: `sm` (28px) · `md` (36px) · `lg` (64px).
+
+É `aria-hidden` **de propósito**: o nome da clínica sempre vem escrito ao lado, e anunciar os dois faz o leitor de tela repetir a marca duas vezes seguidas.
+
 ---
 
 ## Regras que valem para todos
@@ -188,3 +204,4 @@ Empilha com sobreposição e resume o excedente em `+N`.
 4. **Alvo de toque mínimo de 32px**, salvo exceção documentada.
 5. **Texto nunca perde contraste para criar hierarquia** — isso é papel do tamanho e do peso.
 6. **`min-w-0` em filho de flex que tem texto truncável**, senão o `truncate` não funciona.
+7. **Não sobrescreva por fora uma utilitária que o componente já declara.** O `cn` concatena, não resolve conflito do Tailwind: passar `hidden` para um componente que declara `inline-flex` deixa as duas classes na lista e quem decide é a ordem da folha de estilo. Passar `hidden` num `Badge` deixava o selo visível em 390px e cortava o nome do documento para "Receit…". Esconda pelo invólucro: `<span className="hidden sm:block">`.

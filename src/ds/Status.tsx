@@ -75,7 +75,7 @@ export type BadgeTone = 'neutral' | 'accent' | 'success' | 'warning' | 'danger' 
 
 const BADGE_STYLE: Record<BadgeTone, string> = {
   neutral: 'bg-sunken text-secondary',
-  accent: 'bg-accent-soft text-accent',
+  accent: 'bg-accent-soft text-accent-text',
   success: 'bg-success-soft text-success',
   warning: 'bg-warning-soft text-warning',
   danger: 'bg-danger-soft text-danger',
