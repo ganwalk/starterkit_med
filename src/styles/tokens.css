@@ -50,7 +50,6 @@
 
   --violet-50: #f5f3ff;
   --violet-100: #ede9fe;
-  --violet-500: #7c3aed;
   --violet-600: #5b21b6;
 
   /* --- Tipografia --- */
@@ -127,9 +126,16 @@
 
   /* --- Alvo de toque ---
      Mínimo confortável para a recepção, que usa o sistema o dia inteiro e
-     eventualmente em tablet. A auditoria achou 17 controles abaixo disso. */
+     eventualmente em tablet. A auditoria achou 17 controles abaixo disso.
+
+     32px é mais rígido que o mínimo da WCAG 2.5.8 (24px) e menos que o
+     AAA 2.5.5 (44px). O produto interno fica em 32: é mouse e teclado numa
+     jornada de 8h, com a densidade da agenda a pagar. O portal do paciente
+     redefine este mesmo token para 44 — lá é polegar, celular, uma pessoa
+     que entra uma vez a cada seis meses e não tem onde treinar. */
   --target-min: 32px;
   --target-comfortable: 36px;
+  --target-toque: 44px;
 
   /* --- Movimento --- */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);

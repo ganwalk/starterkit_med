@@ -43,6 +43,10 @@ export function Button({
     <button
       className={cn(
         'inline-flex items-center justify-center rounded-pill font-medium transition-base',
+        // Piso pelo token, não pela `size`: o portal do paciente redefine
+        // --target-min para 44px e todo botão sobe junto, sem exceção escrita
+        // controle a controle.
+        'min-h-[var(--target-min)]',
         'disabled:cursor-not-allowed disabled:opacity-[var(--opacity-disabled)]',
         VARIANTS[variant],
         SIZES[size],
@@ -91,6 +95,7 @@ export function IconButton({
       title={label}
       className={cn(
         'inline-flex shrink-0 items-center justify-center rounded-full transition-base',
+        'min-h-[var(--target-min)] min-w-[var(--target-min)]',
         'disabled:cursor-not-allowed disabled:opacity-45',
         styles,
         ICON_SIZES[size],

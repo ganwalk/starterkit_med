@@ -72,7 +72,21 @@ export function IndicadoresPage() {
         }
       />
 
+      {/* Quatro tiles iguais não têm líder, e a pessoa lê os quatro para
+          descobrir se o mês foi bom. Falta é o número que este produto existe
+          para mover e o único com baseline para comparar — leva o dobro de
+          espaço e vem primeiro. */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <Card className="sm:col-span-2">
+          <Stat
+            label="Faltas"
+            value="18,4%"
+            hint="Baseline das entrevistas: 19,2%"
+            delta={{ value: '3,1%', trend: 'down' }}
+            series={[22, 19, 24, 18, 20, 17, 19, 16, 18, 15, 17, 14]}
+            tone="success"
+          />
+        </Card>
         <Card>
           <Stat
             label="Agendamentos"
@@ -81,16 +95,6 @@ export function IndicadoresPage() {
             delta={{ value: '12%', trend: 'up' }}
             series={[8, 12, 9, 14, 11, 16, 13, 18, 15, 21, 19, 24]}
             tone="accent"
-          />
-        </Card>
-        <Card>
-          <Stat
-            label="Faltas"
-            value="18,4%"
-            hint="Baseline das entrevistas: 19,2%"
-            delta={{ value: '3,1%', trend: 'down' }}
-            series={[22, 19, 24, 18, 20, 17, 19, 16, 18, 15, 17, 14]}
-            tone="success"
           />
         </Card>
         <Card>

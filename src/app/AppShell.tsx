@@ -156,7 +156,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       )}
 
       <div className="lg:pl-60">
-        <header className="border-subtle bg-card/85 sticky top-0 z-20 border-b backdrop-blur-xl">
+        <header className="border-subtle bg-card sticky top-0 z-20 border-b">
           <div className="flex h-16 items-center gap-3 px-4 sm:px-6">
             <button
               onClick={() => setGavetaAberta(true)}

@@ -58,6 +58,17 @@ O cartão de agendamento de 15 minutos tem **26px**, abaixo do `--target-min`. A
 
 26px passa na WCAG 2.5.8. Nossa régua de 32px é mais rígida que a norma. Exceção consciente, revisada a cada rodada.
 
+O cartão também carrega `aria-label` com nome, horário, tipo e status: no cartão de 15 minutos o status é só a barra colorida de 3px, e sem o rótulo o leitor de tela recebia apenas o nome do paciente.
+
+## Dois pisos de alvo, por contexto
+
+| Contexto | Piso | Por quê |
+| --- | --- | --- |
+| Produto interno | 32px (`--target-min`) | Mouse e teclado numa jornada de 8h, com a densidade da agenda a pagar |
+| Portal do paciente | 44px (`--target-toque`) | Polegar, celular, uma pessoa que entra uma vez a cada seis meses e não tem onde treinar |
+
+O portal redefine `--target-min` no próprio `<main>`. Todo componente que lê o token sobe junto — não há exceção escrita controle a controle, e um componente novo entra certo por padrão.
+
 ---
 
 ## Falso positivo conhecido

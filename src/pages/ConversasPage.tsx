@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { Alert01Icon, SparklesIcon, WhatsappIcon } from '@hugeicons/core-free-icons'
-import { HugeiconsIcon } from '@hugeicons/react'
+import { Alert01Icon, WhatsappIcon } from '@hugeicons/core-free-icons'
 import { Alert, Avatar, Badge, Button, Card, Input, PageBody, PageHeader, Segmented } from '@/ds'
 import { cn } from '@/lib/cn'
 import { CONVERSAS } from '@/data/plataforma'
@@ -22,7 +21,7 @@ export function ConversasPage() {
       />
 
       <div className="mb-4">
-        <Alert tone="info" icon={SparklesIcon} titulo="O assistente só trata de horário">
+        <Alert tone="info" icon={Alert01Icon} titulo="O assistente só trata de horário">
           Ele agenda, confirma e remarca. Pergunta clínica é passada para a recepção, porque a
           Resolução CFM 2.454/2026 não permite que a IA comunique diagnóstico ou conduta.
         </Alert>
@@ -106,10 +105,7 @@ export function ConversasPage() {
                     )}
                   >
                     {msg.de === 'bot' && (
-                      <span className="mb-1 flex items-center gap-1.5 text-2xs font-bold opacity-80">
-                        <HugeiconsIcon icon={SparklesIcon} size={12} strokeWidth={2} />
-                        Assistente
-                      </span>
+                      <span className="mb-1 block text-2xs font-bold opacity-80">Assistente</span>
                     )}
                     <p className="text-sm leading-snug">{msg.texto}</p>
                     <span className="mt-1 block text-2xs opacity-70">{msg.hora}</span>

@@ -20,6 +20,7 @@ import {
   PageHeader,
   Segmented,
   Sheet,
+  STATUS_LABEL,
   StatusPill,
 } from '@/ds'
 import type { AgendaStatus } from '@/ds'
@@ -73,6 +74,7 @@ function CartaoAgendamento({
   return (
     <button
       onClick={() => onSelect(agendamento)}
+      aria-label={`${agendamento.paciente}, ${agendamento.inicio}, ${agendamento.tipo}, ${STATUS_LABEL[agendamento.status]}`}
       style={{
         gridRow: `${(paraMinutos(agendamento.inicio) - HORA_INICIO * 60) / SLOT + 1} / span ${linhas}`,
       }}
@@ -107,7 +109,7 @@ function CartaoAgendamento({
 
       {!compacto && (
         <p className="text-muted truncate pl-1.5 text-[11px]">
-          {agendamento.inicio} · {agendamento.tipo} · {agendamento.convenio}
+          {agendamento.inicio}, {agendamento.tipo.toLowerCase()}, {agendamento.convenio}
         </p>
       )}
     </button>
@@ -198,7 +200,7 @@ export function AgendaPage() {
         titulo={titulo}
         resumo={
           visao === 'dia'
-            ? `${resumo.total} agendamentos · ${resumo.confirmados} confirmados · ${resumo.pendentes} aguardando confirmação`
+            ? `${resumo.total} agendamentos, ${resumo.confirmados} confirmados e ${resumo.pendentes} aguardando confirmação`
             : visao === 'semana'
               ? 'Um profissional por vez, para encontrar horário livre'
               : 'Carga por dia. Clique num dia para abrir a agenda completa'

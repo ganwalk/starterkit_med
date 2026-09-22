@@ -52,13 +52,23 @@ export interface EmptyStateProps {
   acao?: ReactNode
 }
 
+/**
+ * O ícone fica solto, sem o círculo de fundo que ele tinha antes. Glifo
+ * grande dentro de um ladrilho arredondado é decoração com cara de
+ * ilustração: não diz nada que o título não diga, e ainda empurra o texto
+ * e a ação para baixo, que é o que a pessoa veio ler e fazer.
+ */
 export function EmptyState({ icon, titulo, descricao, acao }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center px-6 py-14 text-center">
+    <div className="flex flex-col items-center justify-center px-6 py-12 text-center">
       {icon && (
-        <div className="bg-sunken text-faint mb-4 flex size-12 items-center justify-center rounded-full">
-          <HugeiconsIcon icon={icon} size={22} strokeWidth={1.5} />
-        </div>
+        <HugeiconsIcon
+          icon={icon}
+          size={22}
+          strokeWidth={1.5}
+          className="text-faint mb-3"
+          aria-hidden
+        />
       )}
       <p className="text-primary text-h4 font-semibold">{titulo}</p>
       <p className="text-secondary mt-1.5 max-w-sm text-sm">{descricao}</p>

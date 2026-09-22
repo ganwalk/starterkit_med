@@ -3,7 +3,6 @@ import {
   Calendar03Icon,
   Clock01Icon,
   Download01Icon,
-  File01Icon,
   Location01Icon,
   Navigation03Icon,
   SecurityCheckIcon,
@@ -71,7 +70,15 @@ export function PortalPage() {
   const [marketing, setMarketing] = useState(false)
 
   return (
-    <main className="bg-page min-h-screen pb-20">
+    <main
+      className="bg-page min-h-screen pb-20"
+      style={
+        {
+          '--target-min': 'var(--target-toque)',
+          '--target-comfortable': 'var(--target-toque)',
+        } as React.CSSProperties
+      }
+    >
       {/* Zona de marca: o único lugar do sistema onde a cor da clínica ocupa
           área grande. No app da recepção isso cansaria numa jornada de 8h. */}
       <header
@@ -92,15 +99,6 @@ export function PortalPage() {
           }}
           aria-hidden
         />
-        <div
-          className="pointer-events-none absolute -top-28 -right-20 size-96 rounded-full"
-          style={{
-            background: 'radial-gradient(circle, #fff 0%, transparent 70%)',
-            opacity: 'var(--opacity-decorative)',
-          }}
-          aria-hidden
-        />
-
         <div className="relative mx-auto max-w-3xl">
           <div className="flex items-center gap-2.5">
             <Marca tone="sobreCor" />
@@ -154,7 +152,7 @@ export function PortalPage() {
                     strokeWidth={1.5}
                     className="shrink-0"
                   />
-                  <dd>14:30 · Retorno · 30 minutos</dd>
+                  <dd>14:30, retorno de 30 minutos</dd>
                 </div>
                 <div className="flex items-start gap-2">
                   <dt className="sr-only">Endereço</dt>
@@ -285,9 +283,6 @@ export function PortalPage() {
                 key={doc.nome}
                 className="hover:bg-hover flex items-center gap-3.5 px-5 py-3.5 transition-base sm:px-6"
               >
-                <span className="bg-sunken text-muted flex size-10 shrink-0 items-center justify-center rounded-lg">
-                  <HugeiconsIcon icon={File01Icon} size={18} strokeWidth={1.5} />
-                </span>
                 <div className="min-w-0 flex-1">
                   <p className="text-primary truncate text-sm font-medium">{doc.nome}</p>
                   <p className="text-muted truncate text-xs">{doc.detalhe}</p>
@@ -372,8 +367,9 @@ export function PortalPage() {
             <Marca />
             <p className="text-secondary text-sm font-semibold">{tenant.nome}</p>
           </div>
-          <p className="mt-1">
-            {tenant.dominio} · Rua 9, 145 · Setor Oeste, Goiânia · (62) 3286-5300
+          <p className="mt-1">Rua 9, 145 · Setor Oeste, Goiânia</p>
+          <p>
+            (62) 3286-5300 · {tenant.dominio}
           </p>
         </footer>
       </div>
