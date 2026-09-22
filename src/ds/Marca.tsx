@@ -22,6 +22,10 @@ export interface MarcaProps {
  * quadrados coloridos vazios soltos pelo código, e o do portal — translúcido
  * sobre o gradiente — parecia imagem que não carregou.
  *
+ * `sobreCor` é branco sólido com a letra na cor da marca, não vidro fosco:
+ * superfície translúcida com blur sobre o gradiente deixava a textura do
+ * herói atravessar o selo, e o selo é a marca da clínica.
+ *
  * Sem logo enviado, mostra o monograma. É `aria-hidden` de propósito: o nome
  * da clínica sempre vem escrito ao lado, e anunciar os dois faz o leitor de
  * tela repetir a marca duas vezes seguidas.
@@ -47,7 +51,9 @@ export function Marca({ tone = 'solido', size = 'sm', className, logo }: MarcaPr
       className={cn(
         TAMANHO[size],
         'flex shrink-0 items-center justify-center font-extrabold',
-        tone === 'solido' ? 'bg-accent text-white' : 'bg-white/20 text-white backdrop-blur-sm',
+        tone === 'solido'
+          ? 'bg-accent text-white'
+          : 'text-accent-text bg-white',
         className,
       )}
     >

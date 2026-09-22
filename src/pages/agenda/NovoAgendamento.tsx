@@ -377,7 +377,8 @@ export function NovoAgendamento({ open, onClose, iso, onCriar }: NovoAgendamento
 
             {pedirSinal && (
               <Alert tone="success" icon={Tick02Icon}>
-                Com sinal pago, a falta é de 2,1%. Sem sinal, 18,4%.
+                Nesta clínica, consultas com sinal pago faltam 2,1% das vezes, contra 18,4% sem
+                sinal — medido nos últimos 90 dias.
               </Alert>
             )}
 

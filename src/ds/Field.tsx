@@ -5,7 +5,7 @@ import type { IconSvgElement } from '@hugeicons/react'
 import { cn } from '@/lib/cn'
 
 const CONTROL =
-  'h-10 w-full rounded-md bg-card border border-subtle px-3 text-body text-primary transition-base placeholder:text-faint hover:border-line-strong focus:border-accent focus:outline-none'
+  'h-10 min-h-[var(--target-min)] w-full rounded-md bg-card border border-subtle px-3 text-body text-primary transition-base placeholder:text-faint hover:border-line-strong focus:border-accent focus:outline-none'
 
 export interface FieldProps {
   label: string
@@ -86,7 +86,7 @@ export function Switch({ checked, onChange, label, hideLabel = false }: SwitchPr
       aria-checked={checked}
       aria-label={hideLabel ? label : undefined}
       onClick={() => onChange(!checked)}
-      className="flex min-h-[var(--target-min)] w-fit items-center gap-2.5 text-left"
+      className="flex min-h-[var(--target-min)] min-w-[var(--target-min)] w-fit items-center gap-2.5 text-left"
     >
       <span
         className={cn(

@@ -27,6 +27,7 @@ export function RecepcaoPage() {
 
   const naSala = FILA.filter((f) => f.status === 'chegou' || chegaram.includes(f.id))
   const emAtendimento = FILA.filter((f) => f.status === 'atendimento')
+  const maiorEspera = Math.max(0, ...naSala.map((f) => f.esperaMinutos))
   const aguardados = FILA.filter((f) => f.checkin === 'pendente' && !chegaram.includes(f.id))
 
   // Espera acima disso vira alerta visível para a recepção agir
@@ -44,24 +45,24 @@ export function RecepcaoPage() {
         }
       />
 
-      <div className="mb-6 grid gap-4 sm:grid-cols-3">
+      {/* "Maior espera" é o único destes três que faz alguém levantar da
+          cadeira; os outros dois são contexto. Com os três no mesmo tile,
+          nada liderava a tela — a recepção lia os três para descobrir se
+          havia problema. Agora o número que manda agir ocupa o dobro. */}
+      <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Card className="lg:col-span-2">
+          <Stat
+            label="Maior espera"
+            value={`${maiorEspera} min`}
+            hint={`Alerta acima de ${ESPERA_ALERTA} min`}
+            delta={maiorEspera > ESPERA_ALERTA ? { value: 'atenção', trend: 'down' } : undefined}
+          />
+        </Card>
         <Card>
           <Stat label="Na sala de espera" value={String(naSala.length)} hint="Fizeram check-in" />
         </Card>
         <Card>
           <Stat label="Em atendimento" value={String(emAtendimento.length)} hint="Consultórios ocupados" />
-        </Card>
-        <Card>
-          <Stat
-            label="Maior espera"
-            value={`${Math.max(0, ...naSala.map((f) => f.esperaMinutos))} min`}
-            hint={`Alerta acima de ${ESPERA_ALERTA} min`}
-            delta={
-              Math.max(0, ...naSala.map((f) => f.esperaMinutos)) > ESPERA_ALERTA
-                ? { value: 'atenção', trend: 'down' }
-                : undefined
-            }
-          />
         </Card>
       </div>
 

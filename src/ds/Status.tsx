@@ -33,7 +33,11 @@ const STATUS_DOT: Record<AgendaStatus, string> = {
   chegou: 'bg-[var(--status-chegou-fg)]',
   atendimento: 'bg-[var(--status-atendimento-fg)]',
   faltou: 'bg-[var(--status-faltou-fg)]',
-  cancelado: 'bg-[var(--status-cancelado-fg)]',
+  // Anel vazado, não disco: "agendado" e "cancelado" são o mesmo neutro, e
+  // sem forma própria os dois estados ficavam indistinguíveis onde a bolinha
+  // aparece sozinha. Distinguir por forma também funciona para quem não
+  // separa as duas cores.
+  cancelado: 'border-[1.5px] border-[var(--status-cancelado-fg)]',
 }
 
 export function StatusDot({ status, className }: { status: AgendaStatus; className?: string }) {

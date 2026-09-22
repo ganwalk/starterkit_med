@@ -82,6 +82,8 @@ Barra com `aria-valuenow`. `label` obrigatório. Use `mostrarValor` quando o nú
 
 Os seis estados da agenda. `compact` mostra só a bolinha, para linhas densas.
 
+`agendado` e `cancelado` são o mesmo neutro, então `cancelado` é **anel vazado** e não disco. Onde a bolinha aparece sozinha, os dois estados precisam se distinguir sem depender de cor.
+
 ### Badge
 
 `tone`: `neutral` · `accent` · `success` · `warning` · `danger` · `info`. Rótulo curto, nunca frase.
@@ -204,4 +206,5 @@ Existe como componente porque o mesmo símbolo aparece no menu, no portal e na p
 4. **Alvo de toque mínimo de 32px**, salvo exceção documentada.
 5. **Texto nunca perde contraste para criar hierarquia** — isso é papel do tamanho e do peso.
 6. **`min-w-0` em filho de flex que tem texto truncável**, senão o `truncate` não funciona.
-7. **Não sobrescreva por fora uma utilitária que o componente já declara.** O `cn` concatena, não resolve conflito do Tailwind: passar `hidden` para um componente que declara `inline-flex` deixa as duas classes na lista e quem decide é a ordem da folha de estilo. Passar `hidden` num `Badge` deixava o selo visível em 390px e cortava o nome do documento para "Receit…". Esconda pelo invólucro: `<span className="hidden sm:block">`.
+7. **Alvo de toque pelo token, nunca pela altura nominal.** `Button`, `IconButton`, `Input`, `Select`, `Switch` e `Accordion` carregam `min-h-[var(--target-min)]`. O produto interno usa 32px; o portal do paciente redefine o token para 44px no `<main>` e todo controle sobe junto, sem exceção escrita controle a controle. É a diferença entre mouse numa jornada de 8h e polegar uma vez a cada seis meses.
+8. **Não sobrescreva por fora uma utilitária que o componente já declara.** O `cn` concatena, não resolve conflito do Tailwind: passar `hidden` para um componente que declara `inline-flex` deixa as duas classes na lista e quem decide é a ordem da folha de estilo. Passar `hidden` num `Badge` deixava o selo visível em 390px e cortava o nome do documento para "Receit…". Esconda pelo invólucro: `<span className="hidden sm:block">`.

@@ -120,6 +120,56 @@ O medidor acusou "sem nome acessível" no `<input type="color">` que o selo da m
 | Problemas de acessibilidade | 1 | **0** |
 | Rolagem lateral (13 rotas × 3 larguras) | 0 | **0** |
 
+## Rodada 5 — auditoria contra a skill `no-red-flags`
+
+Auditoria externa, com a régua de <https://github.com/ProdutosAUVP/no-red-flags>: os padrões que fazem uma interface parecer a média estatística de todas as landing pages já geradas. Rodada em modo Detect primeiro, depois corrigida.
+
+A skill manda tratar **três ou mais "instant tells" juntos** como P0. Havia três.
+
+### P0
+
+**Orb de aurora.** `PortalPage.tsx` tinha um `size-96 rounded-full` com `radial-gradient(circle, #fff …)` fora da tela, atrás do herói. Removido. O gradiente de marca e o respiro já sustentam o bloco; espaço vazio não é problema a resolver.
+
+**Vidro fosco em duas superfícies.** O cabeçalho fixo (`bg-card/85 backdrop-blur-xl`) e o selo da marca (`bg-white/20 backdrop-blur-sm`) viraram superfícies sólidas. No cabeçalho, o conteúdo passava por baixo enquanto a recepção rola a agenda, e o hairline já separava. No selo, a textura do herói atravessava a marca da clínica.
+
+O scrim do `Sheet` **continua** com blur: é o caso que a skill permite — overlay de verdade sobre o conteúdo, com fundo sólido por baixo.
+
+### P1
+
+**Banda de métricas sem líder.** Recepção tinha três tiles iguais e Indicadores, quatro. A pessoa lia todos para descobrir se havia problema. Agora "Maior espera" (o único que faz alguém levantar da cadeira) e "Faltas" (o número que este produto existe para mover, e o único com baseline) ocupam o dobro e vêm primeiro.
+
+**Ladrilho de ícone.** O `EmptyState` punha um glifo de 22px dentro de um círculo de 48px acima do título, empurrando texto e ação para baixo. A lista de documentos do portal repetia o mesmo ícone genérico de arquivo nas três linhas, sem distinguir receita de laudo. Os dois ladrilhos saíram.
+
+**Cadeias de ponto médio.** `14:30 · Retorno · 30 minutos`, um rodapé com quatro campos, o resumo da agenda com três. Viraram frases e linhas. Sobraram só os pares (`data · profissional`), que separam dois campos em vez de montar uma string de metadados.
+
+**`Sparkles` para "IA".** O aviso sobre o limite regulatório do assistente usava o ícone de brilho; agora usa o de alerta, que é do que o aviso trata. Na bolha do bot, o ícone saiu — a palavra "Assistente" já estava escrita ao lado.
+
+**Número sem fonte usado para persuadir.** "Com sinal pago, a falta é de 2,1%. Sem sinal, 18,4%." aparecia no fluxo de agendamento para empurrar uma decisão, sem dizer de onde vinha. Agora diz: medição da própria clínica, últimos 90 dias.
+
+### P2
+
+**Piso de toque de 44px no portal.** O produto interno fica em 32px — mouse e teclado numa jornada de 8h, com a densidade da agenda a pagar. O portal é polegar, celular, uma pessoa que entra uma vez a cada seis meses. Em vez de exceção escrita controle a controle, `Button`, `IconButton`, `Input`, `Select`, `Switch` e `Accordion` passaram a ler `--target-min` como piso, e o portal redefine o token. Medido em 390px: nenhum controle abaixo de 44px.
+
+**Dois estados com a mesma cor.** `agendado` e `cancelado` são o mesmo neutro nos dois temas. Em vez de inventar uma sexta cor, `cancelado` virou **anel vazado** em vez de disco: distingue por forma, o que também funciona para quem não separa os dois cinzas.
+
+**Rótulo do cartão da agenda.** Achado ao reler o cartão: no cartão de 15 minutos o status era só a barra colorida de 3px, e o leitor de tela recebia apenas o nome do paciente. Ganhou `aria-label` com nome, horário, tipo e status.
+
+**Token morto.** `--violet-500` (`#7c3aed`, o hexadecimal que a skill lista nominalmente) não era usado por ninguém. Apagado. `--violet-600` fica: é a cor do estado "em atendimento", com palavra ao lado.
+
+### O que a auditoria confirmou que já estava certo
+
+Manrope com motivo declarado, preto como estado ativo em vez da cor da marca, nenhum gradiente em texto, `transition` com propriedades nomeadas (nunca `all`), uma única entrada orquestrada por página, `prefers-reduced-motion` desligando tudo, os passos 1-2-3 do portal como sequência real, e zero copy portável — "Supercharge", "Get Started", "Seamless" e afins não aparecem em lugar nenhum do produto.
+
+### Resultado
+
+| | antes | depois |
+| --- | --- | --- |
+| Instant tells da skill | 3 | **0** |
+| Contraste reprovando (claro + escuro) | 0 | **0** |
+| Controles abaixo de 44px no portal | 12 | **0** |
+| Problemas de acessibilidade | 0 | **0** |
+| Rolagem lateral (13 rotas × 3 larguras) | 0 | **0** |
+
 ## Como repetir a auditoria
 
 O script vive em `scripts/audit-ux.mjs`. Com o `npm run dev` no ar:
